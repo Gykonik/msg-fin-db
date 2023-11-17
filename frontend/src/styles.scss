@@ -1,0 +1,118 @@
+@layer default, primeng;
+
+// Add PrimeNG Styles
+@import "primeng.css";
+
+// Prime Icons
+@import "primeicons.css";
+
+@import "light-theme";
+@import "dark-theme";
+
+/* STYLE VARIABLES */
+// Headers: var(--surface-900) (by default)
+// Normal Text: var(--text-color)
+// Secondary Text: var(--text-color-secondary)
+// Background: var(--surface-ground)
+// Card Background: var(--surface-card)
+// Hover BG: var(--surface-hover)
+// Highlight BG: var(--highlight-bg)
+// Highlight Text Color: var(--highlight-text-color)
+// Border Radius: var(--border-radius)
+
+* {
+  box-sizing: border-box;
+}
+
+html body {
+  --font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-family);
+  font-size: 14px;
+  //line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  background-color: var(--surface-ground);
+  color: var(--text-color);
+}
+
+/* General Styles */
+:root {
+  --msg-purple-clr: #A01441;
+  --large-padding: 1rem;
+  --default-padding: .5rem;
+  --h1-font-size: 1.5rem;
+  --h2-font-size: 1.25rem;
+  --h3-font-size: 1.125rem;
+
+  --h1-font-weight: 600;
+  --h2-font-weight: 500;
+  --h3-font-weight: 400;
+}
+
+@layer default {
+  .p-button-rounded, .p-button-icon-only {
+    --button-size: 2.25rem;
+    width: var(--button-size);
+    height: var(--button-size);
+    padding: 0;
+  }
+}
+
+/** Global Styles for all Page Headers */
+.page-header {
+  margin: 0;
+  padding: 0;
+}
+
+/** Global Styles for the Page Content */
+.page-content {
+  margin-top: var(--default-padding);
+}
+
+h1, .h1 {
+  font-size: var(--h1-font-size);
+  font-weight: var(--h1-font-weight);
+  color: var(--msg-purple-clr);
+}
+
+h2, .h2 {
+  font-size: var(--h2-font-size);
+  font-weight: var(--h2-font-weight);
+}
+
+h3, .h3 {
+  font-size: var(--h3-font-size);
+  font-weight: var(--h3-font-weight);
+}
+
+/* Utility Classes */
+.text-header {
+  color: var(--header-text-color);
+}
+
+.text-primary {
+  color: var(--primary-text-color);
+}
+
+.text-muted {
+  color: var(--muted-text-color);
+}
+
+.bg-primary {
+  background-color: var(--primary-background-color);
+}
+
+.bg-panel {
+  background-color: var(--panel-background-color);
+}
+
+.bg-hover:hover {
+  background-color: var(--hover-background-color);
+}
+
+/* Additional utility classes as needed */
+

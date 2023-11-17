@@ -1,0 +1,34 @@
+::ng-deep {
+  .p-menubar {
+    gap: var(--large-padding);
+  }
+
+  p-menubarsub {
+    width: 100%;
+  }
+
+  .p-menubar .p-menubar-root-list {
+    gap: var(--default-padding);
+  }
+
+  .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link {
+    // Give the menu-bar items a custom padding
+    padding: calc(1.5 * var(--default-padding)) var(--default-padding);
+    border-radius: var(--border-radius);
+  }
+
+  .p-menubar .p-menubar-custom, .p-menubar .p-menubar-end {
+    margin-left: 0;
+    display: flex;
+    gap: var(--default-padding);
+  }
+}
+
+.logo-link {
+  padding: 0 var(--default-padding);
+  text-decoration: none;
+  color: inherit; /* Makes the link color the same as the surrounding text */
+  font-weight: bold;
+  display: flex;
+  align-items: center; /* Ensures proper alignment with other navbar items */
+}

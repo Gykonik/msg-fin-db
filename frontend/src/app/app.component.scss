@@ -1,0 +1,16 @@
+.container {
+  padding: var(--large-padding);
+  gap: var(--large-padding);
+  height: 100vh; /* Full viewport height */
+  display: grid;
+  grid-template-rows: auto 1fr; /* Header size and remaining space for the dashboard */
+  overflow: hidden; /* Prevents any overflow */
+}
+
+.header {
+  /* Styles for the header */
+  background-color: var(--panel-background-color);
+}
+
+.content:not(:first-child) {
+}

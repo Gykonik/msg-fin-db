@@ -59,11 +59,13 @@ export class ExpensesComponent implements OnInit {
     submitted: boolean = false;
     expenseDialogMode: "ADD" | "EDIT" | null = null;
     columns: Column[] = [
-        {field: 'id', header: 'ID'},
+        {field: 'id', header: 'ID', filterType: "numeric"},
         {field: 'name', header: 'Name', inputType: "text", required: true, getDefaultValue: () => "",
         filterType: "text"},
-        {field: 'description', header: 'Description', pipe: "defaultValue", inputType: "text", getDefaultValue: () => ""},
-        {field: 'category', header: 'Category', pipe: "defaultValue", inputType: "text", getDefaultValue: () => ""},
+        {field: 'description', header: 'Description', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
+        filterType: "text"},
+        {field: 'category', header: 'Category', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
+        filterType: "text"},
         {
             field: 'amount',
             header: 'Amount',
@@ -71,7 +73,8 @@ export class ExpensesComponent implements OnInit {
             classFunction: (value: any): string => Utils.getCurrencyClass(value),
             inputType: "currency",
             required: true,
-            getDefaultValue: () => 0
+            getDefaultValue: () => 0,
+            filterType: "numeric"
         },
         {
             field: 'date',
@@ -79,7 +82,8 @@ export class ExpensesComponent implements OnInit {
             pipe: "germanDate",
             inputType: "date",
             required: true,
-            getDefaultValue: () => new Date()
+            getDefaultValue: () => new Date(),
+            filterType: "date"
         }
     ];
 
@@ -223,15 +227,14 @@ export class ExpensesComponent implements OnInit {
         console.log("Columns: ", this.columns)
     }
 
-
     fetchExpenses(event?: TableLazyLoadEvent): void {
         this.loading = true;
-        const size: number = event?.rows ?? 10;
-        const page: number = (event?.first ?? 0) / size;
+        const page: number = (event?.first ?? 0) / (event?.rows ?? 10);
         const sortField: any = event?.sortField ?? 'date';
-        const sortOrder: "asc" | "desc" = event?.sortOrder === 1 ? 'asc' : 'desc';
+        const sortOrder: string = event?.sortOrder === 1 ? 'asc' : 'desc';
+        const filters = event?.filters;
 
-        this.expenseService.getExpenses(page, size, sortField, sortOrder).subscribe(response => {
+        this.expenseService.getExpenses(page, event?.rows ?? 10, sortField, sortOrder, filters).subscribe(response => {
             this.expenses = response.content;
             this.totalRecords = response.totalElements;
             this.loading = false; // End loading

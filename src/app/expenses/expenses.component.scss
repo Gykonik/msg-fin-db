@@ -20,6 +20,8 @@
   text-align: right;
 }
 
+
+
 .main-content {
   overflow: hidden;
   width: calc(100vw - 2 * var(--large-padding));
@@ -59,6 +61,9 @@
 }
 
 ::ng-deep {
+  .p-inputnumber-buttons-stacked .p-inputnumber-button-group .p-button.p-inputnumber-button {
+    padding: 0
+  }
   .expense-dialog {
     overflow: visible;
   }

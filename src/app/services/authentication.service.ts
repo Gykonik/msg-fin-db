@@ -49,8 +49,9 @@ export class AuthenticationService {
         // TODO: REPLACE ENDPOINT WITH REAL LOGIN ENDPOINT
         return this.dataService.postData('/login', {username, password}).pipe(
             map((response): boolean => {
+                console.log("LOGIN RESPONSE: ", response)
                 // TODO: Somehow set the loggedInUser and rights
-                localStorage.setItem('auth_token', response.token);
+                localStorage.setItem('user_data', response.token);
                 // this.loggedInUserSignal.set()
                 this.messageService.add({severity: 'success', summary: 'Login erfolgreich', detail: 'Du hast dich erfolgreich eingeloggt!', life: 3000});
                 return true; // Indicate successful login
@@ -101,7 +102,7 @@ export class AuthenticationService {
     }
 
     logout(): void {
-        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_data');
         this.loggedInUserSignal.set(null);
         this.messageService.add({severity: 'success', summary: 'Logout erfolgreich', detail: 'Du hast dich erfolgreich ausgeloggt!', life: 3000});
         this.router.navigate(['/'])

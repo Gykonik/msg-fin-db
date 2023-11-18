@@ -4,6 +4,8 @@ import {Observable, throwError} from "rxjs";
 import {catchError, map} from "rxjs/operators";
 import {Expense} from "../types";
 import {HttpParams} from "@angular/common/http";
+import {FilterMetadata} from "primeng/api/filtermetadata";
+import {FilterMatchMode} from "primeng/api";
 
 
 @Injectable({
@@ -15,19 +17,66 @@ export class ExpensesService {
     constructor(private dataService: DataService) {
     }
 
-    getExpenses(page: number, size: number, sortField: string, sortOrder: string): Observable<any> {
-        const params = new HttpParams()
+    getExpenses(page: number, size: number, sortField: string, sortOrder: string, filters?: {
+        [s: string]: FilterMetadata | FilterMetadata[] | undefined;
+    }): Observable<any> {
+        let params = new HttpParams()
             .set('page', page.toString())
             .set('size', size.toString())
             .set('sort', `${sortField},${sortOrder}`);
-        console.log("Params: ", params);
-        return this.dataService.getData(this.EXPENSE_ENDPOINT + "/getAllTransactions", params);
+
+        Object.keys(filters || {}).forEach(key => {
+            const filterValue = filters![key];
+            if (Array.isArray(filterValue)) {
+                filterValue.forEach(filter => {
+                    if (filter.value !== null && filter.value !== undefined) {
+                        params = this.appendFilterParam(params, key, filter);
+                    }
+                });
+            } else if (filterValue) {
+                if (filterValue.value !== null && filterValue.value !== undefined) {
+                    params = this.appendFilterParam(params, key, filterValue);
+                }
+            }
+        });
+
+        return this.dataService.getData(this.EXPENSE_ENDPOINT + "/getTransactionsPaginated", params);
     }
 
-    addExpense(expense: Expense): Observable<boolean> {
-        console.log("ADD EXPENSE: ", expense)
 
-        // TODO: REPLACE ENDPOINT WITH REAL LOGIN ENDPOINT
+    private appendFilterParam(params: HttpParams, key: string, filter: FilterMetadata): HttpParams {
+        let serializedValue = '';
+        switch (filter.matchMode) {
+            case FilterMatchMode.STARTS_WITH:
+            case FilterMatchMode.CONTAINS:
+            case FilterMatchMode.NOT_CONTAINS:
+            case FilterMatchMode.ENDS_WITH:
+            case FilterMatchMode.EQUALS:
+            case FilterMatchMode.NOT_EQUALS:
+                // Text-based filters
+                serializedValue = filter.value;
+                break;
+            case FilterMatchMode.LESS_THAN:
+            case FilterMatchMode.LESS_THAN_OR_EQUAL_TO:
+            case FilterMatchMode.GREATER_THAN:
+            case FilterMatchMode.GREATER_THAN_OR_EQUAL_TO:
+            case FilterMatchMode.BETWEEN:
+                // Numeric filters
+                serializedValue = filter.value.toString();
+                break;
+            case FilterMatchMode.DATE_IS:
+            case FilterMatchMode.DATE_IS_NOT:
+            case FilterMatchMode.DATE_BEFORE:
+            case FilterMatchMode.DATE_AFTER:
+                // Date filters
+                serializedValue = filter.value instanceof Date ? filter.value.toISOString() : filter.value;
+                break;
+        }
+        return params.append(`filter_${key}_${filter.matchMode}`, serializedValue);
+    }
+
+
+    addExpense(expense: Expense): Observable<boolean> {
         return this.dataService.postData(this.EXPENSE_ENDPOINT + "/createTransaction", expense).pipe(
             map((): boolean => {
                 return true; // Indicate successful login

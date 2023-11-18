@@ -1,4 +1,8 @@
 ::ng-deep {
+  .p-menubar-root-list {
+    z-index: 999;
+  }
+
   .p-menubar {
     gap: var(--large-padding);
   }
@@ -9,6 +13,19 @@
 
   .p-menubar .p-menubar-root-list {
     gap: var(--default-padding);
+  }
+
+  .p-menuitem-text {
+    padding: .25rem .5rem;
+  }
+
+
+  .logo {
+
+  }
+
+  .name {
+    color: var(--msg-purple-clr);
   }
 
   .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link {
@@ -24,8 +41,14 @@
   }
 }
 
+
 .logo-link {
-  padding: 0 var(--default-padding);
+  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: var(--default-padding);
   text-decoration: none;
   color: inherit; /* Makes the link color the same as the surrounding text */
   font-weight: bold;

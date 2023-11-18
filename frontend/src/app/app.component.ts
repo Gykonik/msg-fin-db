@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import {NavbarComponent} from "./navbar-component/navbar.component";
-import {DashboardComponent} from "./dashboard-component/dashboard.component";
-import {RouterOutlet} from "@angular/router";
+import {NavbarComponent} from "./navbar/navbar.component";
+import {DashboardComponent} from "./dashboard/dashboard.component";
+import {Router, RouterOutlet} from "@angular/router";
+import {ToastModule} from "primeng/toast";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-root',
@@ -10,10 +12,18 @@ import {RouterOutlet} from "@angular/router";
   imports: [
     NavbarComponent,
     DashboardComponent,
-    RouterOutlet
+    RouterOutlet,
+    ToastModule,
+    NgClass
   ],
   standalone: true
 })
 export class AppComponent {
   protected title: string = 'msg';
+
+  constructor(private router: Router) {}
+
+  useBackground(): boolean {
+    return ["/home", "/login"].includes(this.router.url);
+  }
 }

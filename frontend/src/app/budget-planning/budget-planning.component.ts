@@ -5,9 +5,9 @@ import { CommonModule } from '@angular/common';
   selector: 'app-budget-overview-component',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './budget-overview.component.html',
-  styleUrls: ['./budget-overview.component.scss']
+  templateUrl: './budget-planning.component.html',
+  styleUrls: ['./budget-planning.component.scss']
 })
-export class BudgetOverviewComponent {
+export class BudgetPlanningComponent {
 
 }

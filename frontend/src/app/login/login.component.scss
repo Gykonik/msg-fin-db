@@ -1,0 +1,120 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.login-sign-up-wrapper {
+  --divider-spacing: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.input-label {
+  width: 100%;
+  text-align: right;
+}
+
+.sign-up {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.outer-login-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.login-wrapper {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto auto;
+  gap: var(--default-padding);
+  align-items: center;
+  justify-items: stretch;
+}
+
+::ng-deep {
+  .p-divider-solid.p-divider-vertical:before {
+    border-left-style: solid;
+  }
+
+  .p-divider-solid.p-divider-horizontal:before {
+    border-top-style: solid;
+  }
+}
+
+.username, .password {
+  display: contents; /* Makes the container behave like a Fragment */
+}
+
+.login-btn-wrapper {
+  grid-column: 1 / -1; /* Span across all columns */
+  justify-self: end; // Or maybe use start/center/end
+  align-self: center;
+}
+
+::ng-deep {
+  .small-divider {
+    display: none;
+    width: 100%;
+    height: var(--divider-spacing);
+  }
+
+  .large-divider {
+    display: flex;
+    width: var(--divider-spacing);
+    height: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .signup-form {
+      grid-template-columns: 1fr !important;
+    }
+
+    .p-dialog-content .input-label {
+      text-align: left;
+    }
+
+    .divider {
+      height: auto;
+      width: 100%;
+    }
+
+    .login-sign-up-wrapper {
+      flex-direction: column;
+    }
+
+    .small-divider {
+      display: flex;
+    }
+
+    .large-divider {
+      display: none;
+    }
+  }
+}
+
+.signup-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 10px; /* Spacing between fields */
+  align-items: center;
+}
+
+.form-field.full-width {
+  grid-column: 1 / -1;
+  margin-left: auto;
+}
+
+.error-message {
+  grid-column: 1 / -1; /* Span across both columns */
+  color: red;
+  font-size: 0.8rem;
+  text-align: right;
+}
+

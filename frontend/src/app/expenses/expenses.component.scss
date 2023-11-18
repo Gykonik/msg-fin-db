@@ -1,0 +1,58 @@
+::ng-deep {
+  .p-toolbar-group-left,
+  .p-toolbar-group-right, .control-buttons {
+    display: flex;
+    gap: var(--default-padding);
+    flex-wrap: wrap;
+  }
+}
+
+.table-summary {
+  text-align: right;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--default-padding);
+}
+
+/* expenses.component.scss */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--default-padding);
+}
+
+.expense-input-label {
+  text-align: right;
+  align-self: center;
+}
+
+.expense-input {
+  text-align: left;
+}
+
+.grid-item.button {
+  grid-column: span 2;
+  text-align: right;
+}
+
+.error-message {
+  width: 100%;
+  grid-column: 1 / -1; /* Span across both columns */
+  color: red;
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+::ng-deep {
+  .expense-dialog {
+    overflow: visible;
+  }
+
+  .increment, .decrement {
+    padding: 0;
+  }
+}
+

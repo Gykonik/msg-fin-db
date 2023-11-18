@@ -1,14 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {UserData} from "../types";
 
-export interface UserData {
-  id: number,
-  name: string,
-  email: string,
-  profilePicture: string,
-  jobTitle: string,
-  biography: string
-}
 
 
 @Component({

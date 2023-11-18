@@ -1,13 +1,13 @@
 @layer default, primeng;
 
 // Add PrimeNG Styles
-@import "primeng.css";
+@import "primeng/resources/primeng.css";
 
 // Prime Icons
-@import "primeicons.css";
+@import "primeicons/primeicons.css";
 
-@import "light-theme";
-@import "dark-theme";
+@import "themes/light-theme";
+@import "themes/dark-theme";
 
 /* STYLE VARIABLES */
 // Headers: var(--surface-900) (by default)
@@ -28,10 +28,13 @@ html body {
   --font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+:root {
+  font-size: 14px;
+}
+
 /* Base styles */
 body {
   font-family: var(--font-family);
-  font-size: 14px;
   //line-height: 1.5;
   margin: 0;
   padding: 0;
@@ -53,8 +56,16 @@ body {
   --h3-font-weight: 400;
 }
 
+.negative-amount {
+  color: red;
+}
+
+.positive-amount {
+  color: green;
+}
+
 @layer default {
-  .p-button-rounded, .p-button-icon-only {
+  .button-small {
     --button-size: 2.25rem;
     width: var(--button-size);
     height: var(--button-size);

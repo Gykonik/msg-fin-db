@@ -39,6 +39,10 @@
 }
 
 ::ng-deep {
+  .role-dropdown {
+    width: 100%;
+  }
+
   .p-divider-solid.p-divider-vertical:before {
     border-left-style: solid;
   }
@@ -110,6 +114,7 @@
   grid-column: 1 / -1;
   margin-left: auto;
 }
+
 
 .error-message {
   grid-column: 1 / -1; /* Span across both columns */

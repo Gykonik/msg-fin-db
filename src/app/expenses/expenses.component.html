@@ -37,13 +37,15 @@
     </p-toolbar>
 
     <p-table #dt [value]="expenses" [paginator]="true" [rows]="10"
-             [tableStyle]="{'max-width': 'calc(100vw - 2 * var(--large-padding))'}"
              scrollHeight="flex"
              [scrollable]="true"
              responsiveLayout="scroll"
              [columns]="selectedColumns"
              [(selection)]="selectedExpenses"
-             [globalFilterFields]="['name', 'description', 'category', 'amount', 'date']" class="expenses-table"
+             [showCurrentPageReport]="true"
+             [globalFilterFields]="getAllColumnFields()" class="expenses-table"
+             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+             [rowsPerPageOptions]="[10, 25, 50]"
              dataKey="id" [rowHover]="true">
         <ng-template pTemplate="header" let-columns>
             <tr>

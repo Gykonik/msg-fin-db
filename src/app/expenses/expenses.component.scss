@@ -12,6 +12,7 @@
 }
 
 .main-content {
+  width: calc(100vw - 2 * var(--large-padding));
   display: flex;
   flex-direction: column;
   gap: var(--default-padding);

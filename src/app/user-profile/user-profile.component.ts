@@ -14,10 +14,8 @@ import {UserData} from "../types";
 export class UserProfileComponent {
   protected userData: UserData = {
     id: 1,
-    name: 'Alex Johnson',
+    firstname: 'Alex',
+    surname: 'Johnson',
     email: 'alex.johnson@example.com',
-    profilePicture: 'path/to/profile/picture.jpg', // Replace with actual path or URL
-    jobTitle: 'Software Developer',
-    biography: 'Passionate about technology and software development. Loves to explore new trends in IT and contribute to open-source projects. Enjoys hiking and photography in free time.'
   }
 }

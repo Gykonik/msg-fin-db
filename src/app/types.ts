@@ -31,9 +31,7 @@ export interface Expense {
 
 export interface UserData {
   id: number,
-  name: string,
+  firstname: string,
+  surname: string,
   email: string,
-  profilePicture: string,
-  jobTitle: string,
-  biography: string
 }

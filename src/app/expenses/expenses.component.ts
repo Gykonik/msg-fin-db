@@ -83,6 +83,10 @@ export class ExpensesComponent implements OnInit {
 
     selectedColumns: Column[] = [];
 
+    protected getAllColumnFields(): string[] {
+        return this.selectedColumns.map((column: Column): string => column.field);
+    }
+
     protected getCurrencyClass(column: Column): string {
         if (column.inputType !== "currency") return "";
         return Utils.getCurrencyClass(this.expenseForm.controls[column.field].value);
@@ -324,6 +328,6 @@ export class ExpensesComponent implements OnInit {
 
     protected filterTable(dataTable: Table, event: Event): void {
         const value = (event.target as HTMLInputElement)?.value;
-        if (value) dataTable.filterGlobal(value, 'contains');
+        dataTable.filterGlobal(value, 'contains');
     }
 }

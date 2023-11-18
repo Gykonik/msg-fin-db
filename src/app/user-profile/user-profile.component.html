@@ -1,13 +1,28 @@
-<div class="user-profile">
+<div class="user-profile" *ngIf="authService.getUserData() as data">
+    <!-- Add User Details -->
     <div class="user-details">
         <div class="profile-picture">
-<!--            <img src="{{ userData.profilePicture }}" alt="Profile Picture" />-->
+            <!-- Verwendung des Dummy-Profilbilds aus dem assets-Ordner -->
+            <img src="assets/dummy-profile.png" alt="Profile Picture" class="profile-avatar"/>
         </div>
         <div class="user-info">
-            <h2>{{ userData.firstname }}</h2>
-            <h2>{{ userData.surname }}</h2>
-            <p>{{ userData.email }}</p>
+            <h1>{{ data.firstname }} {{ data.surname }}
+                <span class="user-id h3">(#{{ data.id }})</span>
+            </h1>
+            <p><b>E-Mail:</b> {{ data.email }}</p>
+            <p><b>Berechtigung:</b> {{ accessRightsToString(data.rights) }}</p>
+        </div>
+    </div>
+
+    <!-- Add some Metrics -->
+    <div class="user-metrics">
+        <div class="metric">
+            <p>Total Money Spent</p>
+            <h3 [class]="Utils.getCurrencyClass(moneySpent)">{{moneySpent | germanCurrency}}</h3>
+        </div>
+        <div class="metric">
+            <p>Total Money Earned</p>
+            <h3 [class]="Utils.getCurrencyClass(moneyEarned)">{{moneyEarned | germanCurrency}}</h3>
         </div>
     </div>
 </div>
-

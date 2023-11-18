@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ExpensesService} from '../services/expenses.service'; // Update path as necessary
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {Table, TableModule} from 'primeng/table';
+import {Table, TableLazyLoadEvent, TableModule, TablePageEvent} from 'primeng/table';
 import {Column, Expense} from "../types";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
@@ -51,6 +51,7 @@ import * as FileSaver from 'file-saver';
 export class ExpensesComponent implements OnInit {
     @ViewChild("dt") dataTable: Table | undefined;
 
+    totalRecords: number = 0;
     expenses: Expense[] = [];
     selectedExpenses: Expense[] | null = null;
     currentExpense: Expense | null = null;
@@ -59,7 +60,8 @@ export class ExpensesComponent implements OnInit {
     expenseDialogMode: "ADD" | "EDIT" | null = null;
     columns: Column[] = [
         {field: 'id', header: 'ID'},
-        {field: 'name', header: 'Name', inputType: "text", required: true, getDefaultValue: () => ""},
+        {field: 'name', header: 'Name', inputType: "text", required: true, getDefaultValue: () => "",
+        filterType: "text"},
         {field: 'description', header: 'Description', pipe: "defaultValue", inputType: "text", getDefaultValue: () => ""},
         {field: 'category', header: 'Category', pipe: "defaultValue", inputType: "text", getDefaultValue: () => ""},
         {
@@ -81,6 +83,7 @@ export class ExpensesComponent implements OnInit {
         }
     ];
 
+    loading: boolean = false;
     selectedColumns: Column[] = [];
 
     protected getAllColumnFields(): string[] {
@@ -220,28 +223,23 @@ export class ExpensesComponent implements OnInit {
         console.log("Columns: ", this.columns)
     }
 
-    fetchExpenses() {
-        this.expenseService.getExpenses().subscribe((data: Expense[]) => {
-            this.expenses = data
+
+    fetchExpenses(event?: TableLazyLoadEvent): void {
+        this.loading = true;
+        const size: number = event?.rows ?? 10;
+        const page: number = (event?.first ?? 0) / size;
+        const sortField: any = event?.sortField ?? 'date';
+        const sortOrder: "asc" | "desc" = event?.sortOrder === 1 ? 'asc' : 'desc';
+
+        this.expenseService.getExpenses(page, size, sortField, sortOrder).subscribe(response => {
+            this.expenses = response.content;
+            this.totalRecords = response.totalElements;
+            this.loading = false; // End loading
+        }, error => {
+            this.loading = false; // End loading in case of error
         });
-        this.expenses = [
-            {
-                id: 1,
-                name: "Sample",
-                description: "",
-                amount: 123.23,
-                category: "Demo",
-                date: new Date()
-            },
-            {
-                id: 2,
-                name: "Another Sample",
-                description: "",
-                amount: -999,
-                category: "",
-                date: new Date()
-            }]
     }
+
 
     openNew() {
         this.currentExpense = {id: 0, name: '', description: '', category: '', amount: 0, date: new Date()};
@@ -330,4 +328,6 @@ export class ExpensesComponent implements OnInit {
         const value = (event.target as HTMLInputElement)?.value;
         dataTable.filterGlobal(value, 'contains');
     }
+
+    protected readonly fetch = fetch;
 }

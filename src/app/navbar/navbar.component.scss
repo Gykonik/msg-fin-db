@@ -13,12 +13,18 @@
 
   .p-menubar .p-menubar-root-list {
     gap: var(--default-padding);
+    border-radius: var(--border-radius);
   }
 
   .p-menuitem-text {
     padding: .25rem .5rem;
   }
 
+
+  .login-button.button-small {
+    width: auto;
+    padding: var(--large-padding);
+  }
 
   .logo {
 
@@ -30,7 +36,7 @@
 
   .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link {
     // Give the menu-bar items a custom padding
-    padding: calc(1.5 * var(--default-padding)) var(--default-padding);
+    padding: var(--default-padding) var(--large-padding);
     border-radius: var(--border-radius);
   }
 

@@ -17,6 +17,7 @@ export interface Column {
   filterValues?: any[]; // List of all available filter values
   inputType?: "number" | "date" | "text" | "currency";
   required?: boolean;
+  disabled?: boolean;
 }
 
 export interface Expense {
@@ -28,10 +29,17 @@ export interface Expense {
   date: Date;
 }
 
+export interface BudgetPlanEntry {
+    id: number;
+    category: string;
+    currentBudget?: number;
+    plannedBudget?: number;
+}
 
 export interface UserData {
-  id: number,
-  firstname: string,
-  surname: string,
-  email: string,
+  id: number;
+  firstname: string;
+  surname: string;
+  email: string;
+  rights?: ACCESS_RIGHTS;
 }

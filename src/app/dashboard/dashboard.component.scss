@@ -1,0 +1,28 @@
+/** Global Styles for the Page Content */
+.page-content {
+  margin-top: var(--default-padding);
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns with equal width */
+  grid-template-rows: repeat(2, 1fr); /* 2 rows with equal height */
+  grid-gap: var(--large-padding); /* Replace --large-padding with actual padding size */
+  width: 100%;
+  height: 100%; /* Set to 100% to take full height of its container */
+  margin-top: var(--large-padding);
+}
+
+.grid-item {
+  width: 100%; /* Each grid item takes full width of its cell */
+  height: 100%; /* Each grid item takes full height of its cell */
+  /* Additional styling for cards */
+}
+
+

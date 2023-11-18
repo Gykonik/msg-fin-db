@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import {catchError} from 'rxjs/operators';
 
 /**
  * USAGE:
@@ -22,22 +22,23 @@ import { catchError, map } from 'rxjs/operators';
     providedIn: 'root'
 })
 export class DataService {
-    private apiUrl: string = 'http://yourapi.com/api'; // Replace with your API URL
+    private apiUrl: string = 'http://localhost:8080/api'; // Replace with your API URL
 
     httpOptions = {
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+        headers: new HttpHeaders({'Content-Type': 'application/json'})
     };
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+    }
 
     // GET request to retrieve data
-    getData(endpoint: string): Observable<any> {
-        return this.http.get(`${this.apiUrl}/${endpoint}`, this.httpOptions)
+    getData(endpoint: string, params?: HttpParams): Observable<any> {
+        return this.http.get(`${this.apiUrl}/${endpoint}`, {headers: this.httpOptions.headers, params})
             .pipe(
                 catchError(this.handleError)
-                // You can also add more RxJS operators if needed
             );
     }
+
 
     // POST request to send data
     postData(endpoint: string, data: any): Observable<any> {
@@ -56,8 +57,8 @@ export class DataService {
     }
 
     // DELETE request
-    deleteData(endpoint: string): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/${endpoint}`, this.httpOptions)
+    deleteData(endpoint: string, body?: any): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/${endpoint}`, {...this.httpOptions, body})
             .pipe(
                 catchError(this.handleError)
             );

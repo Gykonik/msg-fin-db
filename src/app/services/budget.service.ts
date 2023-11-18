@@ -2,33 +2,26 @@ import {Injectable} from '@angular/core';
 import {DataService} from "./data.service";
 import {Observable, throwError} from "rxjs";
 import {catchError, map} from "rxjs/operators";
-import {Expense} from "../types";
-import {HttpParams} from "@angular/common/http";
+import {BudgetPlanEntry} from "../types";
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class ExpensesService {
-    private readonly EXPENSE_ENDPOINT: string = "transactions";
-
+export class BudgetService {
     constructor(private dataService: DataService) {
     }
 
-    getExpenses(page: number, size: number, sortField: string, sortOrder: string): Observable<any> {
-        const params = new HttpParams()
-            .set('page', page.toString())
-            .set('size', size.toString())
-            .set('sort', `${sortField},${sortOrder}`);
-        console.log("Params: ", params);
-        return this.dataService.getData(this.EXPENSE_ENDPOINT + "/getAllTransactions", params);
+    getBudgets(): Observable<BudgetPlanEntry[]> {
+        console.log("GET BUDGETS")
+        return this.dataService.getData("/budgets");
     }
 
-    addExpense(expense: Expense): Observable<boolean> {
-        console.log("ADD EXPENSE: ", expense)
+    addBudget(budget: BudgetPlanEntry): Observable<boolean> {
+        console.log("ADD BUDGET: ", budget)
 
         // TODO: REPLACE ENDPOINT WITH REAL LOGIN ENDPOINT
-        return this.dataService.postData(this.EXPENSE_ENDPOINT + "/createTransaction", expense).pipe(
+        return this.dataService.postData('/budgets', budget).pipe(
             map((): boolean => {
                 return true; // Indicate successful login
             }),
@@ -38,9 +31,9 @@ export class ExpensesService {
         );
     }
 
-    updateExpense(expense: Expense): Observable<boolean> {
+    updateBudget(budget: BudgetPlanEntry): Observable<boolean> {
         // TODO: REPLACE ENDPOINT WITH REAL LOGIN ENDPOINT
-        return this.dataService.postData(this.EXPENSE_ENDPOINT + "/updateTransaction/" + expense.id, expense).pipe(
+        return this.dataService.postData('/budgets', budget).pipe(
             map((): boolean => {
                 return true; // Indicate successful login
             }),
@@ -51,8 +44,8 @@ export class ExpensesService {
     }
 
 
-    deleteMultipleExpenses(expenses: Expense[]): Observable<any> {
-        return this.dataService.deleteData(this.EXPENSE_ENDPOINT + "/deleteMultipleTransactions", expenses.map((e: Expense) => e.id)).pipe(
+    deleteMultipleBudgets(budgets: BudgetPlanEntry[]): Observable<any> {
+        return this.dataService.deleteData('/budgets').pipe(
             map((): boolean => {
                 return true; // Indicate successful login
             }),
@@ -62,8 +55,8 @@ export class ExpensesService {
         );
     }
 
-    deleteExpense(expense: Expense): Observable<any> {
-        return this.dataService.deleteData(this.EXPENSE_ENDPOINT + "/deleteTransaction/" + expense.id).pipe(
+    deleteBudget(budget: BudgetPlanEntry): Observable<any> {
+        return this.dataService.deleteData('/budgets').pipe(
             map((): boolean => {
                 return true; // Indicate successful login
             }),

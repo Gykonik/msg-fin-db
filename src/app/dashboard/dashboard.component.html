@@ -3,19 +3,37 @@
 
 <!-- Actual Content -->
 <main class="page-content">
-    Dashboard content goes in here...
+    <div class="grid-container">
+        <!-- Text Card -->
+        <p-card header="Advanced Card" subheader="Card Subheader" class="grid-item">
+            <ng-template pTemplate="header">
+                <img alt="Card" height="100px" src="https://primefaces.org/cdn/primeng/images/usercard.png"/>
+            </ng-template>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur...
+            </p>
+            <ng-template pTemplate="footer">
+                <p-button label="Save" icon="pi pi-check"></p-button>
+                <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary"></p-button>
+            </ng-template>
+        </p-card>
 
-  <p-card header="Advanced Card" subheader="Card Subheader" [style]="{ width: '360px' }">
-    <ng-template pTemplate="header">
-      <img alt="Card" height="100px" src="https://primefaces.org/cdn/primeng/images/usercard.png" />
-    </ng-template>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-      quas!
-    </p>
-    <ng-template pTemplate="footer">
-      <p-button label="Save" icon="pi pi-check"></p-button>
-      <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" [style]="{ 'margin-left': '.5em' }"></p-button>
-    </ng-template>
-  </p-card>
+        <!-- ECharts Cards (Repeat for each of the three remaining cells) -->
+        <p-card class="grid-item">
+            <!-- ECharts Component -->
+            <!-- You can insert your echarts component here -->
+        </p-card>
+
+        <!-- ECharts Cards (Repeat for each of the three remaining cells) -->
+        <p-card class="grid-item">
+            <!-- ECharts Component -->
+            <!-- You can insert your echarts component here -->
+        </p-card>
+
+        <!-- ECharts Cards (Repeat for each of the three remaining cells) -->
+        <p-card class="grid-item">
+            <!-- ECharts Component -->
+            <!-- You can insert your echarts component here -->
+        </p-card>
+    </div>
 </main>

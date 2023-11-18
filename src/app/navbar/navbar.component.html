@@ -1,6 +1,6 @@
 <!-- app.component.html -->
 <div class="card">
-  <p-menubar [model]="(hasVisibleItems()) ? items : []" >
+  <p-menubar [model]="(hasVisibleItems()) ? items : []">
     <ng-template pTemplate="start">
       <!-- Clickable Logo -->
       <a routerLink="/" class="logo-link">
@@ -15,10 +15,19 @@
       <p-button [icon]="themeService.currentTheme() === 'light' ? 'pi pi-sun' : 'pi pi-moon'"
                 styleClass="button-small"
                 (click)="toggleTheme()"></p-button>
-      <p-button icon="pi pi-user"
+      <p-button *ngIf="authService.isLoggedIn()"
+                icon="pi pi-user"
                 styleClass="button-small"
                 (click)="openUserProfile()"></p-button>
-      <!-- TODO: ADD LINK TO LOGIN PAGE -->
+      <p-button *ngIf="authService.isLoggedIn()"
+                label="Logout"
+                styleClass="login-button button-small"
+                (onClick)="authService.logout()"></p-button>
+      <p-button *ngIf="!authService.isLoggedIn()"
+                icon="pi pi-user"
+                label="Login"
+                styleClass="login-button button-small"
+                routerLink="/login"></p-button>
     </ng-template>
   </p-menubar>
 </div>

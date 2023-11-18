@@ -1,3 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.expenses-table {
+  overflow: hidden;
+}
+
 ::ng-deep {
   .p-toolbar-group-left,
   .p-toolbar-group-right, .control-buttons {
@@ -12,10 +21,12 @@
 }
 
 .main-content {
+  overflow: hidden;
   width: calc(100vw - 2 * var(--large-padding));
   display: flex;
   flex-direction: column;
   gap: var(--default-padding);
+  height: 100%;
 }
 
 /* expenses.component.scss */

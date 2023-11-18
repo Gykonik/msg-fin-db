@@ -14,6 +14,7 @@
 
         <ng-template pTemplate="right">
             <p-multiSelect [options]="columns" [(ngModel)]="selectedColumns" optionLabel="header"
+                           [maxSelectedLabels]="2"
                            selectedItemsLabel="{0} columns selected" [style]="{'min-width': '200px'}"
                            placeholder="Select Columns"></p-multiSelect>
 
@@ -37,7 +38,11 @@
     </p-toolbar>
 
     <p-table #dt [value]="expenses" [paginator]="true" [rows]="10"
+             (onLazyLoad)="fetchExpenses($event)"
+            [lazy]="true" [loading]="loading" [totalRecords]="totalRecords"
+             styleClass="p-datatable-sm"
              scrollHeight="flex"
+             sortField="date" [sortOrder]="-1"
              [scrollable]="true"
              responsiveLayout="scroll"
              [columns]="selectedColumns"

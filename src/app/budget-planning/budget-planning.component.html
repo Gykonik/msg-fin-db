@@ -1,7 +1,159 @@
 <!-- Header -->
-<h1 class="page-header">Budget Overview</h1>
+<script src="../services/expenses.service.ts"></script><h1 class="header-title">Budget Planung</h1>
 
 <!-- Actual Content -->
-<main class="page-content">
-    Overview content goes in here...
+<main class="main-content">
+    <p-toolbar class="toolbar">
+        <ng-template pTemplate="left">
+            <!-- TODO: ADD "styleClass" -->
+            <button pButton pRipple label="New" icon="pi pi-plus" class="button-new" (click)="openNew()"></button>
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="button-delete"
+                    (click)="deleteSelectedBudgetsConfirmation()"
+                    [disabled]="!selectedBudget || !selectedBudget.length"></button>
+        </ng-template>
+
+        <ng-template pTemplate="right">
+            <p-multiSelect [options]="getAllColumnsAsEnabled()" [(ngModel)]="selectedColumns" optionLabel="header"
+                           [maxSelectedLabels]="1"
+                           selectedItemsLabel="{0} columns selected" [style]="{'min-width': '200px'}"
+                           placeholder="Select Columns"></p-multiSelect>
+
+            <!-- TODO: Add magnifying glass -->
+            <!-- Search -->
+            <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input type="text" pInputText (input)="filterTable(dt, $event)" placeholder="Search..."/>
+      </span>
+            <!-- Clear Filter -->
+            <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="resetTable()"></p-button>
+
+            <!-- Import Excel Button -->
+            <p-button icon="pi pi-file-import" [outlined]="true"
+                      styleClass="import-button"></p-button>
+
+            <!-- Export to Excel Button -->
+            <p-button icon="pi pi-file-excel" [outlined]="true" styleClass="export-button"
+                      (click)="exportToExcel()"></p-button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt [value]="budgetPlan" [paginator]="true" [rows]="10"
+             scrollHeight="flex"
+             [scrollable]="true"
+             responsiveLayout="scroll"
+             [columns]="selectedColumns"
+             [(selection)]="selectedBudget"
+             [showCurrentPageReport]="true"
+             styleClass="p-datatable-sm"
+             [globalFilterFields]="getAllColumnFields()" class="budgets-table"
+             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+             [rowsPerPageOptions]="[10, 25, 50]"
+             dataKey="id" [rowHover]="true">
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th class="checkbox-column">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th *ngFor="let col of columns" pSortableColumn="{{col.field}}">
+                    {{col.header}}
+                    <p-sortIcon field="{{col.field}}"></p-sortIcon>
+                    <p-columnFilter *ngIf="col.filterType" field="{{col.field}}"
+                                    [type]="col.filterType"></p-columnFilter>
+                </th>
+                <th class="action-column">Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-budget let-columns="columns">
+            <tr [ngClass]="getBudgetClass(budget)">
+                <td>
+                    <p-tableCheckbox [value]="budget"></p-tableCheckbox>
+                </td>
+                <td *ngFor="let col of columns"
+                    [ngClass]="col.classFunction ? col.classFunction(budget[col.field]) : ''">
+                    <ng-container *ngIf="col.pipe; else noPipe">
+                        <ng-container
+                                *ngTemplateOutlet="applyPipe; context: { value: budget[col.field], pipe: col.pipe }"></ng-container>
+                    </ng-container>
+                    <ng-template #noPipe>{{ budget[col.field] }}</ng-template>
+                </td>
+                <td class="control-buttons">
+                    <p-button icon="pi pi-pencil" [rounded]="true" styleClass="button-edit button-small"
+                              (click)="openEditBudget(budget)"></p-button>
+                    <p-button icon="pi pi-trash" [rounded]="true"
+                              styleClass="button-remove button-small"
+                              (click)="deleteBudgetConfirmation(budget)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template #applyPipe let-value="value" let-pipe="pipe">
+            <ng-container *ngIf="pipe === 'germanDate'">{{ value | germanDate }}</ng-container>
+            <ng-container *ngIf="pipe === 'capitalize'">{{ value | capitalize }}</ng-container>
+            <ng-container *ngIf="pipe === 'germanCurrency'">{{ (value || 0) | germanCurrency }}</ng-container>
+            <ng-container *ngIf="pipe === 'defaultValue'">{{ value | defaultValue }}</ng-container>
+        </ng-template>
+
+
+        <ng-template pTemplate="summary">
+            <div class="table-summary">In total there are {{ budgetPlan ? budgetPlan.length : 0 }} budgets.</div>
+        </ng-template>
+    </p-table>
 </main>
+
+
+<p-dialog [(visible)]="budgetDialogVisible" [modal]="true" [style]="{width: '90vh', maxWidth: '500px'}"
+          contentStyleClass="budget-dialog"
+          [header]="currentBudget ? 'Edit Budget' : 'New Budget Entry'" (onHide)="hideDialog()">
+    <form [formGroup]="budgetForm" class="grid">
+        <ng-container *ngFor="let col of columns">
+            <ng-container *ngIf="isInputField(col)">
+                <label class="budget-input-label" for="{{col.field}}">{{col.header}} <span
+                        *ngIf="col.required">*</span></label>
+                <ng-container [ngSwitch]="col.inputType">
+                    <!-- Number Input -->
+                    <ng-container *ngSwitchCase="'number'">
+                        <p-inputNumber inputId="inputnumber" [formControlName]="col.field"
+                                       decrementButtonClass="decrement"
+                                       incrementButtonClass="increment"
+                                       [ngClass]="{'ng-invalid ng-dirty': isInvalid(col)}"></p-inputNumber>
+                    </ng-container>
+
+                    <!-- Date Input -->
+                    <ng-container *ngSwitchCase="'date'">
+                        <p-calendar [formControlName]="col.field" [showTime]="true" [showSeconds]="true"
+                                    [showIcon]="true" [showButtonBar]="true"
+                                    [ngClass]="{'ng-invalid ng-dirty': isInvalid(col)}"></p-calendar>
+                    </ng-container>
+
+                    <!-- Text Input -->
+                    <ng-container *ngSwitchCase="'text'">
+                        <input class="budget-input" pInputText [formControlName]="col.field"
+                               [ngClass]="{'ng-invalid ng-dirty': isInvalid(col)}"/>
+                    </ng-container>
+
+                    <!-- Currency Input -->
+                    <ng-container *ngSwitchCase="'currency'">
+                        <p-inputNumber mode="currency" currency="EUR" locale="de-DE" decrementButtonClass="decrement"
+                                       incrementButtonClass="increment"
+                                       [prefix]="getCurrencyPrefix(col)"
+                                       [formControlName]="col.field" [showButtons]="true"
+                                       [inputStyleClass]="getBudgetClassFromForm(col)"
+                                       [ngClass]="{'ng-invalid ng-dirty': isInvalid(col)}"></p-inputNumber>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Error Message -->
+                <span
+                        *ngIf="isInvalid(col)"
+                        class="error-message">Required field</span>
+            </ng-container>
+        </ng-container>
+        <div class="grid-item button">
+            <button pButton label="Save" icon="pi pi-check" (click)="onSubmit()"></button>
+        </div>
+    </form>
+</p-dialog>
+
+<!-- Confirm Dialog -->
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

@@ -69,7 +69,7 @@
              [showCurrentPageReport]="true"
              styleClass="p-datatable-sm"
              [globalFilterFields]="getAllColumnFields()" class="budgets-table"
-             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+             currentPageReportTemplate="Zeige Einträge {first} bis {last} von {totalRecords} an"
              [rowsPerPageOptions]="[10, 25, 50]"
              dataKey="id" [rowHover]="true">
         <ng-template pTemplate="header" let-columns>
@@ -127,7 +127,7 @@
 
 
         <ng-template pTemplate="summary">
-            <div class="table-summary">In total there are {{ budgetPlan ? budgetPlan.length : 0 }} budgets.</div>
+            <div class="table-summary">Insgesamt gibt es {{ budgetPlan ? budgetPlan.length : 0 }} Budget-Einträge.</div>
         </ng-template>
     </p-table>
 </main>

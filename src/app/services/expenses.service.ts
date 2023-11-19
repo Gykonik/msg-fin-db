@@ -50,6 +50,16 @@ export class ExpensesService {
         return this.dataService.getData(endpoint);
     }
 
+    getCandlestickChartData(): Observable<any> {
+        const endpoint: string = `${this.EXPENSE_ENDPOINT}/candlestickChartData/${this.authService.getUserId()}`;
+        return this.dataService.getData(endpoint);
+    }
+
+    getWeeklyScatterChart(): Observable<any> {
+        const endpoint: string = `${this.EXPENSE_ENDPOINT}/weekScatterChart/${this.authService.getUserId()}`;
+        return this.dataService.getData(endpoint);
+    }
+
 
     private appendFilterParam(params: HttpParams, key: string, filter: FilterMetadata): HttpParams {
         let serializedValue = '';

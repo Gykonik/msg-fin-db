@@ -17,6 +17,7 @@ export class AuthenticationService {
 
     public isLoggedIn: Signal<boolean> = computed(() => this.getUserData() !== null)
 
+
     public getUserId(): number {
         return this.getUserData()?.id || -1;
     }
@@ -52,8 +53,6 @@ export class AuthenticationService {
     }
 
     login(username: string, password: string): Observable<boolean> {
-        console.log("LOGIN WITH: ", {username, password})
-
         // TODO: REPLACE ENDPOINT WITH REAL LOGIN ENDPOINT
         return this.dataService.postData(this.USER_ENDPOINT + '/login', {username, password}).pipe(
             map((response: any): boolean => {

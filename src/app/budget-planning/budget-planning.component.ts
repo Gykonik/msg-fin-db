@@ -39,17 +39,19 @@ export class BudgetPlanningComponent {
     budgetDialogVisible: boolean = false;
     submitted: boolean = false;
     budgetDialogMode: "ADD" | "EDIT" | null = null;
+    loading: boolean = false;
     columns: Column[] = [
+        {field: 'id', header: 'ID'},
         {field: 'category', header: 'Kategorie', inputType: "text", required: true, getDefaultValue: () => ""},
         {
-            field: 'currentBudget', header: 'Aktuelles Budget', pipe: "germanCurrency",
+            field: 'currentAmount', header: 'Aktuelles Budget', pipe: "germanCurrency",
             inputType: "currency",
             disabled: true,
             getDefaultValue: () => 0,
             classFunction: (value: any): string => "current-budget"
         },
         {
-            field: 'plannedBudget', header: 'Geplantes Budget', pipe: "germanCurrency",
+            field: 'plannedAmount', header: 'Geplantes Budget', pipe: "germanCurrency",
             inputType: "currency", getDefaultValue: () => 0,
             classFunction: (value: any): string => "planned-budget",
         },
@@ -57,21 +59,33 @@ export class BudgetPlanningComponent {
 
     selectedColumns: Column[] = [];
 
+    private calculateBudgetClass(current: number | undefined, planned: number | undefined, colClass: string): string {
+        if (!current || !planned) return "neutral " + colClass;
+
+        // Case when the planned amount is positive
+        if (planned > 0 && current > planned) {
+            return "over-budget " + colClass;
+        }
+
+        // Case when the planned amount is negative
+        else if (planned < 0 && current < planned) {
+            return "over-budget " + colClass;
+        } else {
+            return "under-budget " + colClass;
+        }
+    }
 
     protected getBudgetClass(budget: BudgetPlanEntry): string {
-        if(!budget.currentBudget || !budget.plannedBudget) return "neutral"
-        if(budget.currentBudget > budget.plannedBudget) return "over-budget";
-        else return "under-budget";
+        return this.calculateBudgetClass(budget.currentAmount, budget.plannedAmount, "");
     }
 
     protected getBudgetClassFromForm(col: Column): string {
-        const current = this.budgetForm.controls["currentBudget"].value;
-        const planned = this.budgetForm.controls["plannedBudget"].value;
-        const colClass: string = col.classFunction!(this.budgetForm.controls[col.field].value);
+        const current = this.budgetForm.controls["currentAmount"].value;
+        const planned = this.budgetForm.controls["plannedAmount"].value;
+        const colValue = this.budgetForm.controls[col.field].value;
+        const colClass: string = col.classFunction ? col.classFunction(colValue) : "";
 
-        if(!current || !planned) return "neutral " + colClass;
-        if(current > planned) return "over-budget " + colClass;
-        else return "under-budget " + colClass;
+        return this.calculateBudgetClass(current, planned, colClass);
     }
 
     protected getAllColumnFields(): string[] {
@@ -121,7 +135,6 @@ export class BudgetPlanningComponent {
     }
 
     private sendCreateBudgetRequest(budget: BudgetPlanEntry): void {
-        console.log("ADD VALID BUDGET...", budget);
         this.budgetPlanningService.addBudget(budget).pipe(
             tap({
                 next: (success: boolean): void => {
@@ -142,7 +155,6 @@ export class BudgetPlanningComponent {
     }
 
     private sendEditBudgetRequest(budget: BudgetPlanEntry): void {
-        console.log("EDIT BUDGET...", budget);
         this.budgetPlanningService.updateBudget(budget).pipe(
             tap({
                 next: (success: boolean): void => {
@@ -201,7 +213,7 @@ export class BudgetPlanningComponent {
         });
         this.budgetForm = this.fb.group(controls);
         this.columns.forEach((col: Column) => {
-            if(col.disabled) this.budgetForm.controls[col.field].disable()
+            if (col.disabled) this.budgetForm.controls[col.field].disable()
         })
     }
 
@@ -211,7 +223,6 @@ export class BudgetPlanningComponent {
 
     ngOnInit() {
         this.fetchBudgets();
-        console.log("Columns: ", this.columns)
     }
 
     getAllColumnsAsEnabled(): Column[] {
@@ -223,19 +234,15 @@ export class BudgetPlanningComponent {
 
 
     fetchBudgets() {
+        this.loading = true;
         this.budgetPlanningService.getBudgets().subscribe((data: BudgetPlanEntry[]) => {
             this.budgetPlan = data
+            this.loading = false;
         });
-
-        this.budgetPlan = [
-            {id: 1, category: 'Groceries', currentBudget: 200, plannedBudget: 250},
-            {id: 2, category: 'Sample', currentBudget: 300, plannedBudget: 250},
-            {id: 3, category: 'Utilities', plannedBudget: 150},
-            {id: 4, category: 'Entertainment', currentBudget: 100}]
     }
 
     openNew() {
-        this.currentBudget = {id: 0, category: '', currentBudget: 0, plannedBudget: 0};
+        this.currentBudget = {id: 0, category: '', currentAmount: 0, plannedAmount: 0};
         this.budgetDialogMode = "ADD";
         this.openBudgetDialog()
     }

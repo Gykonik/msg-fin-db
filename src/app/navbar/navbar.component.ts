@@ -45,7 +45,7 @@ export class NavbarComponent {
                 visible: this.authService.isLoggedIn()
             },
             {
-                label: 'Benutzer Verwalten',
+                label: 'Benutzerverwaltung',
                 icon: 'pi pi-fw pi-chart-line',
                 routerLink: '/manage-users',
                 visible: this.authService.isLoggedIn() && this.authService.isAdmin()

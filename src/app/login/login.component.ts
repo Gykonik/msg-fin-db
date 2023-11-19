@@ -145,7 +145,6 @@ export class LoginComponent {
             this.authService.signup(userData).pipe(
                 tap({
                     next: (success: boolean): void => {
-                        console.log("RES: ", success)
                         if (success) {
                             this.hideDialog()
                         } else {

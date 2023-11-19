@@ -37,9 +37,11 @@
         </ng-template>
     </p-toolbar>
 
-    <p-table #dt [value]="budgetPlan" [paginator]="true" [rows]="10"
+    <p-table #dt [value]="budgetPlan" [paginator]="true" [rows]="50"
              scrollHeight="flex"
+             [loading]="loading"
              [scrollable]="true"
+             paginatorDropdownAppendTo="body"
              responsiveLayout="scroll"
              [columns]="selectedColumns"
              [(selection)]="selectedBudget"

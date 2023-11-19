@@ -9,6 +9,10 @@ export type Theme = 'dark' | 'light';
 export class ThemeService {
     private currentThemeSignal: WritableSignal<Theme>;
 
+    public getCurrentTheme(): Theme {
+        return this.currentThemeSignal();
+    }
+
     constructor() {
         // Check for stored theme in localStorage or default to 'light'
         const storedTheme: Theme = (localStorage.getItem('theme') as Theme) || this.getPreferredTheme();

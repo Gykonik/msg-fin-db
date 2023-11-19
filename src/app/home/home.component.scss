@@ -30,6 +30,14 @@
   margin-bottom: 10px;
 }
 
+.navigation-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: var(--large-padding);
+  justify-content: center;
+  margin-top: 2rem;
+}
+
 .card-description {
   font-weight: 600;
   margin-bottom: 20px;

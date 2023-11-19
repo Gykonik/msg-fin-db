@@ -143,7 +143,6 @@ export class ExpensesComponent implements OnInit {
     }
 
     private sendCreateExpenseRequest(expense: Expense): void {
-        console.log("ADD VALID EXPENSE...", expense);
         this.expenseService.addExpense(expense).pipe(
             tap({
                 next: (success: boolean): void => {
@@ -229,7 +228,6 @@ export class ExpensesComponent implements OnInit {
 
     ngOnInit() {
         this.fetchExpenses();
-        console.log("Columns: ", this.columns)
     }
 
     fetchExpenses(event?: TableLazyLoadEvent): void {

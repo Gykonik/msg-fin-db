@@ -5,27 +5,31 @@
 <main class="page-content">
     <div class="grid-container">
         <!-- Text Card -->
-        <p-card header="Advanced Card" subheader="Card Subheader" class="grid-item">
+        <p-card header="Advanced Card" subheader="Card Subheader" class="grid-item info-card">
             <p>
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur...
             </p>
+            <div class="badge-wrapper">
+                <img src="assets/silver.jpg" class="badge"/>
+            </div>
+            <p>
+                Description...
+            </p>
         </p-card>
 
-        <!-- ECharts Cards (Repeat for each of the three remaining cells) -->
-        <p-card class="grid-item">
-            <!-- ECharts Component -->
-            <!-- You can insert your echarts component here -->
+        <!-- Bar-Chart -->
+        <p-card class="grid-item" header="Aktuelles vs. Geplantes Budget">
+            <div id="barChart" class="chart"></div>
         </p-card>
 
-        <!-- ECharts Cards (Repeat for each of the three remaining cells) -->
-        <p-card class="grid-item">
-            <div id="expensesCandlestickChart" style="height: 400px;"></div>
+        <!-- Candle Stick Chart -->
+        <p-card class="grid-item" header="Ausgaben und Einnahmen Überblick">
+            <div id="expensesCandlestickChart" class="chart"></div>
         </p-card>
 
-        <!-- ECharts Cards (Repeat for each of the three remaining cells) -->
-        <p-card class="grid-item">
-            <!-- ECharts Component -->
-            <!-- You can insert your echarts component here -->
+        <!-- Scatter Chart Chart -->
+        <p-card class="grid-item" header="Ausgaben in dieser Woche">
+            <div id="scatterChart" class="chart"></div>
         </p-card>
     </div>
 </main>

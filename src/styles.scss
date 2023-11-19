@@ -122,3 +122,20 @@ h3, .h3 {
 
 /* Additional utility classes as needed */
 
+
+
+
+.user-metrics {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.metric * {
+  text-align: center;
+}
+
+.metric h3 {
+  margin: 0;
+  font-size: 20px;
+}

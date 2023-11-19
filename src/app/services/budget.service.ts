@@ -3,66 +3,63 @@ import {DataService} from "./data.service";
 import {Observable, throwError} from "rxjs";
 import {catchError, map} from "rxjs/operators";
 import {BudgetPlanEntry} from "../types";
+import {AuthenticationService} from "./authentication.service";
 
 
 @Injectable({
     providedIn: 'root'
 })
+@Injectable({
+    providedIn: 'root'
+})
 export class BudgetService {
-    constructor(private dataService: DataService) {
+    private readonly BUDGET_ENDPOINT: string = "budget";
+
+    constructor(private dataService: DataService, private authService: AuthenticationService) {
     }
 
-    getBudgets(): Observable<BudgetPlanEntry[]> {
-        console.log("GET BUDGETS")
-        return this.dataService.getData("/budgets");
+    getBudgetBarChart(): Observable<any> {
+        const endpoint: string = `${this.BUDGET_ENDPOINT}/budgetChartData/${this.authService.getUserId()}`;
+        return this.dataService.getData(endpoint);
     }
 
-    addBudget(budget: BudgetPlanEntry): Observable<boolean> {
-        console.log("ADD BUDGET: ", budget)
+    getBudgets(): Observable<any> {
+        const endpoint: string = `${this.BUDGET_ENDPOINT}/list/${this.authService.getUserId()}`;
+        return this.dataService.getData(endpoint);
+    }
 
-        // TODO: REPLACE ENDPOINT WITH REAL LOGIN ENDPOINT
-        return this.dataService.postData('/budgets', budget).pipe(
-            map((): boolean => {
-                return true; // Indicate successful login
-            }),
-            catchError((error) => {
-                return throwError(error); // Forward the error
-            })
+    addBudget(budget: BudgetPlanEntry): Observable<any> {
+        const endpoint: string = `${this.BUDGET_ENDPOINT}/create/${this.authService.getUserId()}`;
+        return this.dataService.postData(endpoint, budget).pipe(
+            map(response => response),
+            catchError((error) => throwError(error))
         );
     }
 
-    updateBudget(budget: BudgetPlanEntry): Observable<boolean> {
-        // TODO: REPLACE ENDPOINT WITH REAL LOGIN ENDPOINT
-        return this.dataService.postData('/budgets', budget).pipe(
-            map((): boolean => {
-                return true; // Indicate successful login
-            }),
-            catchError((error) => {
-                return throwError(error); // Forward the error
-            })
-        );
-    }
-
-
-    deleteMultipleBudgets(budgets: BudgetPlanEntry[]): Observable<any> {
-        return this.dataService.deleteData('/budgets').pipe(
-            map((): boolean => {
-                return true; // Indicate successful login
-            }),
-            catchError((error) => {
-                return throwError(error); // Forward the error
-            })
+    updateBudget(budget: BudgetPlanEntry): Observable<any> {
+        const endpoint: string = `${this.BUDGET_ENDPOINT}/update/${this.authService.getUserId()}/${budget.id}`;
+        return this.dataService.updateData(endpoint, budget).pipe(
+            map(response => response),
+            catchError((error) => throwError(error))
         );
     }
 
     deleteBudget(budget: BudgetPlanEntry): Observable<any> {
-        return this.dataService.deleteData('/budgets').pipe(
-            map((): boolean => {
-                return true; // Indicate successful login
-            }),
-            catchError((error) => {
-                return throwError(error); // Forward the error
-            })
+        const endpoint: string = `${this.BUDGET_ENDPOINT}/delete/${this.authService.getUserId()}/${budget.id}`;
+        return this.dataService.deleteData(endpoint).pipe(
+            map(response => response),
+            catchError((error) => throwError(error))
         );
     }
+
+    deleteMultipleBudgets(expenses: BudgetPlanEntry[]): Observable<any> {
+        const ids = expenses.map((e: BudgetPlanEntry) => e.id);
+        const endpoint = `${this.BUDGET_ENDPOINT}/deleteMultipleBudgets/${this.authService.getUserId()}`;
+        return this.dataService.deleteData(endpoint, ids).pipe(
+            map((): boolean => true),
+            catchError((error) => throwError(error))
+        );
+    }
+
 }
+

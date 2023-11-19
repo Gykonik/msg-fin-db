@@ -1,4 +1,12 @@
 ::ng-deep {
+  .p-menuitem-link-active {
+    border: 1px solid var(--msg-purple-clr);
+
+    &, * {
+      color: var(--msg-purple-clr);
+    }
+  }
+
   .p-menubar-root-list {
     z-index: 999;
   }

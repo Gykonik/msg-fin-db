@@ -3,10 +3,10 @@
         <div class="login-sign-up-wrapper">
             <!-- Login Wrapper -->
             <div class="outer-login-wrapper">
-                <div class="login-wrapper" [formGroup]="loginForm" (keyup.enter)="login()">
+                <div class="login-wrapper" [formGroup]="loginForm">
                     <div class="username">
                         <label class="input-label">Username</label>
-                        <input pInputText formControlName="username" type="text" class="w-12rem"/>
+                        <input pInputText formControlName="username" type="text" (keyup.enter)="login()"/>
                         <div class="error-message"
                              *ngIf="loginSubmitted && loginForm.controls['username'].errors?.['required']">
                             Username is required
@@ -14,7 +14,7 @@
                     </div>
                     <div class="password">
                         <label class="input-label">Password</label>
-                        <input pInputText formControlName="password" type="password" class="w-12rem"/>
+                        <input pInputText formControlName="password" type="password" (keyup.enter)="login()"/>
                         <div class="error-message"
                              *ngIf="loginSubmitted && loginForm.controls['password'].errors?.['required']">
                             Password is required

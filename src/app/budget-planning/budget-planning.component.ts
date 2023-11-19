@@ -22,11 +22,12 @@ import * as XLSX from "xlsx";
 import * as FileSaver from "file-saver";
 import {tap} from "rxjs";
 import {BudgetService} from "../services/budget.service";
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
     selector: 'app-budget-overview-component',
     standalone: true,
-    imports: [CommonModule, ButtonModule, CalendarModule, CapitalizePipe, ConfirmDialogModule, DefaultValuePipe, DialogModule, FormsModule, GermanCurrencyPipe, GermanDatePipe, InputNumberModule, InputTextModule, MultiSelectModule, RippleModule, SharedModule, TableModule, ToolbarModule, ReactiveFormsModule],
+    imports: [CommonModule, ButtonModule, CalendarModule, CapitalizePipe, ConfirmDialogModule, DefaultValuePipe, DialogModule, FormsModule, GermanCurrencyPipe, GermanDatePipe, InputNumberModule, InputTextModule, MultiSelectModule, RippleModule, SharedModule, TableModule, ToolbarModule, ReactiveFormsModule, TooltipModule],
     templateUrl: './budget-planning.component.html',
     styleUrls: ['./budget-planning.component.scss']
 })

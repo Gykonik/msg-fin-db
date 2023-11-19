@@ -6,8 +6,17 @@
     <p-toolbar class="toolbar">
         <ng-template pTemplate="left">
             <!-- TODO: ADD "styleClass" -->
-            <button pButton pRipple label="New" icon="pi pi-plus" class="button-new" (click)="openNew()"></button>
-            <button pButton pRipple label="Delete" icon="pi pi-trash" class="button-delete"
+            <button pButton pRipple label="Neu" icon="pi pi-plus" class="button-new" (click)="openNew()"
+                    pTooltip="Neuen Eintrag erstellen"
+                    [tooltipOptions]="{
+                tooltipPosition: 'top',
+                showDelay: 1000}"></button>
+            <button pButton pRipple label="Löschen" icon="pi pi-trash" class="button-delete"
+                    pTooltip="Ausgewählte Einträge Löschen"
+                    [tooltipOptions]="{
+                    disabled: !selectedBudget || !selectedBudget.length,
+                tooltipPosition: 'top',
+                showDelay: 1000}"
                     (click)="deleteSelectedBudgetsConfirmation()"
                     [disabled]="!selectedBudget || !selectedBudget.length"></button>
         </ng-template>
@@ -15,8 +24,8 @@
         <ng-template pTemplate="right">
             <p-multiSelect [options]="getAllColumnsAsEnabled()" [(ngModel)]="selectedColumns" optionLabel="header"
                            [maxSelectedLabels]="1"
-                           selectedItemsLabel="{0} columns selected" [style]="{'min-width': '200px'}"
-                           placeholder="Select Columns"></p-multiSelect>
+                           selectedItemsLabel="{0} Spalten ausgewählt" [style]="{'min-width': '200px'}"
+                           placeholder="Spalten auswählen"></p-multiSelect>
 
             <!-- TODO: Add magnifying glass -->
             <!-- Search -->
@@ -25,14 +34,26 @@
         <input type="text" pInputText (input)="filterTable(dt, $event)" placeholder="Search..."/>
       </span>
             <!-- Clear Filter -->
-            <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="resetTable()"></p-button>
+            <p-button label="Filter" [outlined]="true" icon="pi pi-filter-slash" (click)="resetTable()"
+                      pTooltip="Filter zurücksetzen"
+                      [tooltipOptions]="{
+                tooltipPosition: 'top',
+                showDelay: 1000}"></p-button>
 
             <!-- Import Excel Button -->
             <p-button icon="pi pi-file-import" [outlined]="true"
+                      pTooltip="Aus Datei importieren"
+                      [tooltipOptions]="{
+                tooltipPosition: 'top',
+                showDelay: 1000}"
                       styleClass="import-button"></p-button>
 
             <!-- Export to Excel Button -->
             <p-button icon="pi pi-file-excel" [outlined]="true" styleClass="export-button"
+                      pTooltip="Nach Excel exportieren"
+                      [tooltipOptions]="{
+                tooltipPosition: 'top',
+                showDelay: 1000}"
                       (click)="exportToExcel()"></p-button>
         </ng-template>
     </p-toolbar>
@@ -62,7 +83,7 @@
                     <p-columnFilter *ngIf="col.filterType" field="{{col.field}}"
                                     [type]="col.filterType"></p-columnFilter>
                 </th>
-                <th class="action-column">Actions</th>
+                <th class="action-column">Aktionen</th>
             </tr>
         </ng-template>
 
@@ -81,9 +102,17 @@
                 </td>
                 <td class="control-buttons">
                     <p-button icon="pi pi-pencil" [rounded]="true" styleClass="button-edit button-small"
+                              pTooltip="Eintrag bearbeiten"
+                              [tooltipOptions]="{
+                tooltipPosition: 'left',
+                showDelay: 1000}"
                               (click)="openEditBudget(budget)"></p-button>
                     <p-button icon="pi pi-trash" [rounded]="true"
                               styleClass="button-remove button-small"
+                              pTooltip="Eintrag löschen"
+                              [tooltipOptions]="{
+                tooltipPosition: 'left',
+                showDelay: 1000}"
                               (click)="deleteBudgetConfirmation(budget)"></p-button>
                 </td>
             </tr>

@@ -23,6 +23,13 @@
   margin-top: var(--large-padding);
 }
 
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+}
+
 .grid-item {
   width: 100%; /* Each grid item takes full width of its cell */
   height: 100%; /* Each grid item takes full height of its cell */

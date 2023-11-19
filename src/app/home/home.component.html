@@ -26,8 +26,9 @@
                       class="login-button"></p-button>
         </div>
     </p-card>
-    <p-card [style]="{'max-width': '750px'}" header="Quick Overview"
-            *ngIf="authService.isLoggedIn()">
+    <p-card [style]="{'max-width': '750px'}" header="Willkommen zurück, {{authService.getUserData()?.username}}!"
+            *ngIf=" authService.isLoggedIn()
+    ">
         <p class="card-description">
             Du bist bereits eingeloggt. Klicke auf den Button unten, um zu deinem Dashboard zu gelangen.
         </p>

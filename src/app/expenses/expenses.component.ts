@@ -22,6 +22,7 @@ import {tap} from "rxjs";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import * as XLSX from 'xlsx';
 import * as FileSaver from 'file-saver';
+import {TooltipModule} from "primeng/tooltip";
 
 @Component({
     selector: 'app-expenses',
@@ -46,6 +47,7 @@ import * as FileSaver from 'file-saver';
         CalendarModule,
         InputNumberModule,
         ConfirmDialogModule,
+        TooltipModule,
     ]
 })
 export class ExpensesComponent implements OnInit {
@@ -65,18 +67,18 @@ export class ExpensesComponent implements OnInit {
             filterType: "text"
         },
         {
-            field: 'description', header: 'Description', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
+            field: 'description', header: 'Beschreibung', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
             filterType: "text"
         },
         {
-            field: 'category', header: 'Category', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
+            field: 'category', header: 'Kategorie', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
             filterType: "text"
         },
         {
             field: 'amount',
-            header: 'Amount',
+            header: 'Betrag',
             pipe: "germanCurrency",
-            classFunction: (value: any): string => Utils.getCurrencyClass(value),
+            classFunction: (value: any): string => Utils.getCurrencyClass(value) + ' amount',
             inputType: "currency",
             required: true,
             getDefaultValue: () => 0,
@@ -84,7 +86,7 @@ export class ExpensesComponent implements OnInit {
         },
         {
             field: 'date',
-            header: 'Date',
+            header: 'Datum',
             pipe: "germanDate",
             inputType: "date",
             required: true,

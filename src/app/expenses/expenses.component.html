@@ -6,8 +6,17 @@
     <p-toolbar class="toolbar">
         <ng-template pTemplate="left">
             <!-- TODO: ADD "styleClass" -->
-            <button pButton pRipple label="New" icon="pi pi-plus" class="button-new" (click)="openNew()"></button>
-            <button pButton pRipple label="Delete" icon="pi pi-trash" class="button-delete"
+            <button pButton pRipple label="Neu" icon="pi pi-plus" class="button-new" (click)="openNew()"
+                    pTooltip="Neuen Eintrag erstellen"
+                    [tooltipOptions]="{
+                tooltipPosition: 'top',
+                showDelay: 1000}"></button>
+            <button pButton pRipple label="Löschen" icon="pi pi-trash" class="button-delete"
+                    pTooltip="Ausgewählte Einträge löschen"
+                    [tooltipOptions]="{
+                    disabled: !selectedExpenses || !selectedExpenses.length,
+                tooltipPosition: 'top',
+                showDelay: 1000}"
                     (click)="deleteSelectedExpensesConfirmation()"
                     [disabled]="!selectedExpenses || !selectedExpenses.length"></button>
         </ng-template>
@@ -15,24 +24,36 @@
         <ng-template pTemplate="right">
             <p-multiSelect [options]="columns" [(ngModel)]="selectedColumns" optionLabel="header"
                            [maxSelectedLabels]="2"
-                           selectedItemsLabel="{0} columns selected" [style]="{'min-width': '200px'}"
-                           placeholder="Select Columns"></p-multiSelect>
+                           selectedItemsLabel="{0} Spalten ausgewählt" [style]="{'min-width': '200px'}"
+                           placeholder="Ausgewählte Spalten"></p-multiSelect>
 
             <!-- TODO: Add magnifying glass -->
             <!-- Search -->
             <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
-        <input type="text" pInputText (input)="filterTable(dt, $event)" placeholder="Search..."/>
+        <input type="text" pInputText (input)="filterTable(dt, $event)" placeholder="Suchen..."/>
       </span>
             <!-- Clear Filter -->
-            <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="resetTable()"></p-button>
+            <p-button label="Filter" [outlined]="true" icon="pi pi-filter-slash" (click)="resetTable()"
+                      pTooltip="Filter zurücksetzen"
+                      [tooltipOptions]="{
+                tooltipPosition: 'top',
+                showDelay: 1000}"></p-button>
 
             <!-- Import Excel Button -->
             <p-button icon="pi pi-file-import" [outlined]="true"
+                      pTooltip="Aus Datei importieren"
+                      [tooltipOptions]="{
+                tooltipPosition: 'top',
+                showDelay: 1000}"
                       styleClass="import-button"></p-button>
 
             <!-- Export to Excel Button -->
             <p-button icon="pi pi-file-excel" [outlined]="true" styleClass="export-button"
+                      pTooltip="Nach Excel exportieren"
+                      [tooltipOptions]="{
+                tooltipPosition: 'top',
+                showDelay: 1000}"
                       (click)="exportToExcel()"></p-button>
         </ng-template>
     </p-toolbar>
@@ -50,7 +71,7 @@
              [(selection)]="selectedExpenses"
              [showCurrentPageReport]="true"
              [globalFilterFields]="getAllColumnFields()" class="expenses-table"
-             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+             currentPageReportTemplate="Zeige Einträge {first} bis {last} von {totalRecords} an"
              [rowsPerPageOptions]="[10, 25, 50]"
              dataKey="id" [rowHover]="true">
         <ng-template pTemplate="header" let-columns>
@@ -64,7 +85,7 @@
                     <p-columnFilter *ngIf="col.filterType" field="{{col.field}}" display="menu"
                                     [type]="col.filterType"></p-columnFilter>
                 </th>
-                <th class="action-column">Actions</th>
+                <th class="action-column">Aktionen</th>
             </tr>
         </ng-template>
 
@@ -83,8 +104,16 @@
                 </td>
                 <td class="control-buttons">
                     <p-button icon="pi pi-pencil" [rounded]="true" styleClass="button-edit button-small"
+                              pTooltip="Eintrag bearbeiten"
+                              [tooltipOptions]="{
+                tooltipPosition: 'left',
+                showDelay: 1000}"
                               (click)="openEditExpense(expense)"></p-button>
                     <p-button icon="pi pi-trash" [rounded]="true"
+                              pTooltip="Eintrag löschen"
+                              [tooltipOptions]="{
+                tooltipPosition: 'left',
+                showDelay: 1000}"
                               styleClass="button-remove button-small"
                               (click)="deleteExpenseConfirmation(expense)"></p-button>
                 </td>

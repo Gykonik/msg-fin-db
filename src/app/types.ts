@@ -1,7 +1,7 @@
 export enum ACCESS_RIGHTS {
-    NONE,
-    USER,
-    ADMIN
+    NONE = "NONE",
+    USER = "USER",
+    ADMIN = "ADMIN"
 }
 
 export interface Column {

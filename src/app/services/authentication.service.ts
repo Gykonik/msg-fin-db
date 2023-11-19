@@ -67,7 +67,6 @@ export class AuthenticationService {
 
                 localStorage.setItem('user_data', JSON.stringify(userData));
                 this.loggedInUserSignal.set(userData);
-                // this.loggedInUserSignal.set()
                 this.messageService.add({severity: 'success', summary: 'Login erfolgreich', detail: 'Du hast dich erfolgreich eingeloggt!', life: 3000});
                 return true;
             }),

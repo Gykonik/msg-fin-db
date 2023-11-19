@@ -24,6 +24,7 @@ export class DashboardComponent {
 
     badgeLevel: string = "";
     badgeMessage: string = "";
+    badgeIcon: string = "";
     badgeDescription: string = "";
 
     constructor(private expensesService: ExpensesService, private budgetService: BudgetService, private themeService: ThemeService) {
@@ -52,18 +53,22 @@ export class DashboardComponent {
     private updateBadgeInfo(): void {
         switch (this.badgeLevel) {
             case 'Gold':
+                this.badgeIcon = "gold.jpg";
                 this.badgeMessage = "Du machst das großartig";
                 this.badgeDescription = "Deine Budgettreue ist ausgezeichnet. Mach weiter so!";
                 break;
             case 'Silver':
+                this.badgeIcon = "silver.jpg";
                 this.badgeMessage = "Gut gemacht, aber es gibt noch Verbesserungspotenzial";
                 this.badgeDescription = "Du bist ziemlich nah an deinem Budget, aber du kannst deine Ausgaben noch optimieren.";
                 break;
             case 'Bronze':
+                this.badgeIcon = "bronze.jpg";
                 this.badgeMessage = "Versuche in Zukunft etwas mehr zu sparen!";
                 this.badgeDescription = "Du weichst von deinem Budget ab. Überprüfe und passe deine Ausgabengewohnheiten an.";
                 break;
             default:
+                this.badgeIcon = "unbekannt.jpg";
                 this.badgeMessage = "Unbekannt";
                 this.badgeDescription = "Dein Budgettreue-Level konnte nicht bestimmt werden.";
                 break;
@@ -233,7 +238,8 @@ export class DashboardComponent {
                     formatter: (params: any) => {
                         let result = params[0].name + '<br/>';
                         params.forEach((param: any) => {
-                            result += `Ausgaben: ${Math.round(param.data[param.seriesIndex])}€<br/>`;
+                            const expense = param.data[1] !== undefined ? `${Math.round(param.data[1])}€` : 'N/A';
+                            result += `Ausgaben: ${expense}<br/>`;
                         });
                         return result;
                     }
@@ -256,6 +262,14 @@ export class DashboardComponent {
                     trigger: 'axis',
                     axisPointer: {
                         type: 'cross'
+                    },
+                    formatter: (params: any) => {
+                        const data = params[0].data;
+                        return `${params[0].name}<br/>
+                            Anfangsbudget: ${data[0]}€<br/>
+                            Endbudget: ${data[1]}€<br/>
+                            Mindestausgaben: ${data[2]}€<br/>
+                            Höchstausgaben: ${data[3]}€`;
                     }
                 },
                 grid: {

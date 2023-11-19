@@ -17,6 +17,10 @@
 }
 
 ::ng-deep {
+  .current-budget, .planned-budget {
+    text-align: right;
+  }
+
   .over-budget {
     &.current-budget, .current-budget {
       color: red;

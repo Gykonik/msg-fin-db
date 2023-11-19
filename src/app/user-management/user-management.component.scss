@@ -1,3 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-table {
+  overflow: hidden;
+}
+
 .main-content {
   overflow: hidden;
   width: calc(100vw - 2 * var(--large-padding));
@@ -6,3 +15,5 @@
   gap: var(--default-padding);
   height: 100%;
 }
+
+

@@ -5,15 +5,15 @@
 <main class="page-content">
     <div class="grid-container">
         <!-- Text Card -->
-        <p-card header="Advanced Card" subheader="Card Subheader" class="grid-item info-card">
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur...
+        <p-card header="Advanced Card"  class="grid-item info-card">
+            <p class="badgeMessage">
+                {{ badgeMessage }}
             </p>
             <div class="badge-wrapper">
-                <img src="assets/silver.jpg" class="badge"/>
+                <img [src]="'assets/' + badgeLevel.toLowerCase() + '.jpg'" class="badge"/>
             </div>
             <p>
-                Description...
+                {{ badgeDescription }}
             </p>
         </p-card>
 

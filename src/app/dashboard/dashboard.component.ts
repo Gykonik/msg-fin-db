@@ -1,11 +1,11 @@
-import {Component, effect} from '@angular/core';
+import {Component, effect, HostListener} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {CardModule} from "primeng/card";
 import {ButtonModule} from "primeng/button";
 import * as echarts from "echarts";
 import {ExpensesService} from "../services/expenses.service";
 import {BudgetService} from "../services/budget.service";
-import {ThemeService} from "../services/theme.service";
+import {Theme, ThemeService} from "../services/theme.service";
 
 @Component({
     selector: 'app-dashboard-component',
@@ -17,26 +17,100 @@ import {ThemeService} from "../services/theme.service";
 export class DashboardComponent {
     public static readonly SCATTER_POINT_SCALE_FACTOR: number = 25;
 
+    private barChartInstance: echarts.ECharts | null = null;
+    private scatterChartInstance: echarts.ECharts | null = null;
+    private candlestickChartInstance: echarts.ECharts | null = null;
+
+
+    badgeLevel: string = "";
+    badgeMessage: string = "";
+    badgeDescription: string = "";
+
     constructor(private expensesService: ExpensesService, private budgetService: BudgetService, private themeService: ThemeService) {
         effect(() => {
-            this.themeService.getCurrentTheme();
+            const theme: Theme = this.themeService.getCurrentTheme();
+            // "theme" = "dark" | "light"
             this.redrawCharts();
         })
+        this.loadBadgeLevel();
     }
 
-    private redrawCharts(): void {
 
+    private loadBadgeLevel(): void {
+        this.budgetService.getBadgeLevel().subscribe({
+            next: (response) => {
+                this.badgeLevel = response.level;
+                this.updateBadgeInfo();
+            },
+            error: (err) => {
+                console.log("Error: ", err);
+                // Handle error
+            }
+        });
     }
+
+    private updateBadgeInfo(): void {
+        switch (this.badgeLevel) {
+            case 'Gold':
+                this.badgeMessage = "Du machst das großartig";
+                this.badgeDescription = "Deine Budgettreue ist ausgezeichnet. Mach weiter so!";
+                break;
+            case 'Silver':
+                this.badgeMessage = "Gut gemacht, aber es gibt noch Verbesserungspotenzial";
+                this.badgeDescription = "Du bist ziemlich nah an deinem Budget, aber du kannst deine Ausgaben noch optimieren.";
+                break;
+            case 'Bronze':
+                this.badgeMessage = "Versuche in Zukunft etwas mehr zu sparen!";
+                this.badgeDescription = "Du weichst von deinem Budget ab. Überprüfe und passe deine Ausgabengewohnheiten an.";
+                break;
+            default:
+                this.badgeMessage = "Unbekannt";
+                this.badgeDescription = "Dein Budgettreue-Level konnte nicht bestimmt werden.";
+                break;
+        }
+    }
+
 
     ngOnInit(): void {
         this.initializeChart();
     }
 
 
+    private redrawCharts(): void {
+        this.disposeChart(this.barChartInstance);
+        this.disposeChart(this.scatterChartInstance);
+        this.disposeChart(this.candlestickChartInstance);
+
+        this.initializeChart();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: Event): void {
+        this.resizeCharts();
+    }
+
+    private resizeCharts(): void {
+        this.resizeChart(this.barChartInstance);
+        this.resizeChart(this.scatterChartInstance);
+        this.resizeChart(this.candlestickChartInstance);
+    }
+
+    private resizeChart(chartInstance: echarts.ECharts | null): void {
+        if (chartInstance) {
+            chartInstance.resize();
+        }
+    }
+
+    private disposeChart(chartInstance: echarts.ECharts | null): void {
+        if (chartInstance) {
+            chartInstance.dispose();
+        }
+    }
+
     private initializeChart(): void {
-        this.initCandlestickChart();
-        this.initScatterChart();
         this.initBarChart();
+        this.initScatterChart();
+        this.initCandlestickChart();
     }
 
 
@@ -46,7 +120,7 @@ export class DashboardComponent {
             const actualValues = response.actualAmount;
             const plannedValues = response.plannedAmount;
 
-            const chartInstance = echarts.init(document.getElementById('barChart') as HTMLElement);
+            this.barChartInstance = echarts.init(document.getElementById('barChart') as HTMLElement);
 
 
             const option = {
@@ -82,8 +156,7 @@ export class DashboardComponent {
                 ]
             };
 
-            chartInstance.setOption(option);
-
+            this.barChartInstance.setOption(option);
         })
     }
 
@@ -96,7 +169,7 @@ export class DashboardComponent {
             // Define a function to normalize the values to a range of 0-1
             const normalize = (value: number) => (maxValue - value) / (maxValue - minValue);
 
-            const chartInstance = echarts.init(document.getElementById('scatterChart') as HTMLElement);
+            this.scatterChartInstance = echarts.init(document.getElementById('scatterChart') as HTMLElement);
             const hours = [
                 '12a', '1a', '2a', '3a', '4a', '5a', '6a',
                 '7a', '8a', '9a', '10a', '11a',
@@ -173,15 +246,15 @@ export class DashboardComponent {
                 series: series
             };
 
-            chartInstance.setOption(option);
+            this.scatterChartInstance.setOption(option);
         });
     }
 
     private initCandlestickChart(): void {
         this.expensesService.getCandlestickChartData().subscribe((chartData: any) => {
-            const chartInstance = echarts.init(document.getElementById('expensesCandlestickChart') as HTMLElement);
+            this.candlestickChartInstance = echarts.init(document.getElementById('expensesCandlestickChart') as HTMLElement);
 
-            chartInstance.setOption({
+            this.candlestickChartInstance.setOption({
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {

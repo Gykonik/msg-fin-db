@@ -23,6 +23,11 @@ export class BudgetService {
         return this.dataService.getData(endpoint);
     }
 
+    getBadgeLevel(): Observable<any> {
+        const endpoint: string = `${this.BUDGET_ENDPOINT}/adherenceLevel/${this.authService.getUserId()}`;
+        return this.dataService.getData(endpoint);
+    }
+
     getBudgets(): Observable<any> {
         const endpoint: string = `${this.BUDGET_ENDPOINT}/list/${this.authService.getUserId()}`;
         return this.dataService.getData(endpoint);

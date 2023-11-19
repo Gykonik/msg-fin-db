@@ -101,6 +101,13 @@
         <ng-template pTemplate="summary">
             <div class="table-summary">In total there are {{ expenses ? expenses.length : 0 }} expenses.</div>
         </ng-template>
+
+        <!-- Empty Table Message -->
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="100%">No entries found.</td>
+            </tr>
+        </ng-template>
     </p-table>
 </main>
 

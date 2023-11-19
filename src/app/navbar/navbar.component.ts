@@ -45,12 +45,6 @@ export class NavbarComponent {
                 visible: this.authService.isLoggedIn()
             },
             {
-                label: 'Konten',
-                icon: 'pi pi-fw pi-chart-line',
-                routerLink: '/accounts',
-                visible: this.authService.isLoggedIn()
-            },
-            {
                 label: 'Benutzer Verwalten',
                 icon: 'pi pi-fw pi-chart-line',
                 routerLink: '/manage-users',

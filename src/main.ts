@@ -15,29 +15,31 @@ import {HomeComponent} from "./app/home/home.component";
 import {registerLocaleData} from "@angular/common";
 import localeDe from '@angular/common/locales/de';
 import localeDeExtra from '@angular/common/locales/extra/de';
+import {DataService} from "./app/services/data.service";
 
 registerLocaleData(localeDe, 'de-DE', localeDeExtra);
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent, canMatch: [authGuard]},
-  { path: 'budget-planning', component: BudgetPlanningComponent },
-  { path: 'expenses', component: ExpensesComponent },
-  { path: 'accounts', component: AccountsComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' }, // default route
-  { path: '**', redirectTo: '/home' } // wildcard for unmatched routes
+    {path: 'home', component: HomeComponent},
+    {path: 'login', component: LoginComponent},
+    {path: 'dashboard', component: DashboardComponent, canMatch: [authGuard]},
+    {path: 'budget-planning', component: BudgetPlanningComponent, canMatch: [authGuard]},
+    {path: 'expenses', component: ExpensesComponent, canMatch: [authGuard]},
+    {path: 'accounts', component: AccountsComponent, canMatch: [authGuard]},
+    {path: '', redirectTo: '/home', pathMatch: 'full'}, // default route
+    {path: '**', redirectTo: '/home'} // wildcard for unmatched routes
 ];
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideRouter(routes),
-    provideAnimations(),
-    provideHttpClient(),
-    DialogService,
-    DynamicDialogConfig,
-    DynamicDialogRef,
-    MessageService,
-    ConfirmationService,
-  ],
+    providers: [
+        provideRouter(routes),
+        provideAnimations(),
+        provideHttpClient(),
+        DialogService,
+        DynamicDialogConfig,
+        DynamicDialogRef,
+        MessageService,
+        ConfirmationService,
+        DataService
+    ],
 }).catch((error) => console.error(error));

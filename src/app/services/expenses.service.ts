@@ -6,6 +6,7 @@ import {Expense} from "../types";
 import {HttpParams} from "@angular/common/http";
 import {FilterMetadata} from "primeng/api/filtermetadata";
 import {FilterMatchMode} from "primeng/api";
+import {AuthenticationService} from "./authentication.service";
 
 
 @Injectable({
@@ -14,13 +15,13 @@ import {FilterMatchMode} from "primeng/api";
 export class ExpensesService {
     private readonly EXPENSE_ENDPOINT: string = "transactions";
 
-    constructor(private dataService: DataService) {
+    constructor(private dataService: DataService, private authService: AuthenticationService) {
     }
 
     getExpenses(page: number, size: number, sortField: string, sortOrder: string, filters?: {
         [s: string]: FilterMetadata | FilterMetadata[] | undefined;
     }): Observable<any> {
-        let params = new HttpParams()
+        let params: HttpParams = new HttpParams()
             .set('page', page.toString())
             .set('size', size.toString())
             .set('sort', `${sortField},${sortOrder}`);
@@ -40,7 +41,13 @@ export class ExpensesService {
             }
         });
 
-        return this.dataService.getData(this.EXPENSE_ENDPOINT + "/getTransactionsPaginated", params);
+        const endpoint: string = `${this.EXPENSE_ENDPOINT}/getTransactionsPaginated/${this.authService.getUserId()}`;
+        return this.dataService.getData(endpoint, params);
+    }
+
+    getAllExpenses(): Observable<any> {
+        const endpoint: string = `${this.EXPENSE_ENDPOINT}/getAllTransactions/${this.authService.getUserId()}`;
+        return this.dataService.getData(endpoint);
     }
 
 
@@ -77,48 +84,44 @@ export class ExpensesService {
 
 
     addExpense(expense: Expense): Observable<boolean> {
-        return this.dataService.postData(this.EXPENSE_ENDPOINT + "/createTransaction", expense).pipe(
-            map((): boolean => {
-                return true; // Indicate successful login
-            }),
-            catchError((error) => {
-                return throwError(error); // Forward the error
-            })
+        const endpoint = `${this.EXPENSE_ENDPOINT}/createTransaction/${this.authService.getUserId()}`;
+        return this.dataService.postData(endpoint, expense).pipe(
+            map((): boolean => true),
+            catchError((error) => throwError(error))
         );
     }
 
     updateExpense(expense: Expense): Observable<boolean> {
-        // TODO: REPLACE ENDPOINT WITH REAL LOGIN ENDPOINT
-        return this.dataService.postData(this.EXPENSE_ENDPOINT + "/updateTransaction/" + expense.id, expense).pipe(
-            map((): boolean => {
-                return true; // Indicate successful login
-            }),
-            catchError((error) => {
-                return throwError(error); // Forward the error
-            })
+        const endpoint = `${this.EXPENSE_ENDPOINT}/updateTransaction/${this.authService.getUserId()}/${expense.id}`;
+        return this.dataService.updateData(endpoint, expense).pipe(
+            map((): boolean => true),
+            catchError((error) => throwError(error))
         );
     }
 
 
     deleteMultipleExpenses(expenses: Expense[]): Observable<any> {
-        return this.dataService.deleteData(this.EXPENSE_ENDPOINT + "/deleteMultipleTransactions", expenses.map((e: Expense) => e.id)).pipe(
-            map((): boolean => {
-                return true; // Indicate successful login
-            }),
-            catchError((error) => {
-                return throwError(error); // Forward the error
-            })
+        const ids = expenses.map((e: Expense) => e.id);
+        const endpoint = `${this.EXPENSE_ENDPOINT}/deleteMultipleTransactions/${this.authService.getUserId()}`;
+        return this.dataService.deleteData(endpoint, ids).pipe(
+            map((): boolean => true),
+            catchError((error) => throwError(error))
         );
     }
 
     deleteExpense(expense: Expense): Observable<any> {
-        return this.dataService.deleteData(this.EXPENSE_ENDPOINT + "/deleteTransaction/" + expense.id).pipe(
-            map((): boolean => {
-                return true; // Indicate successful login
-            }),
-            catchError((error) => {
-                return throwError(error); // Forward the error
-            })
+        const endpoint = `${this.EXPENSE_ENDPOINT}/deleteTransaction/${this.authService.getUserId()}/${expense.id}`;
+        return this.dataService.deleteData(endpoint).pipe(
+            map((): boolean => true),
+            catchError((error) => throwError(error))
+        );
+    }
+
+    getSumOfTransactions(): Observable<any> {
+        const endpoint = `${this.EXPENSE_ENDPOINT}/sumTransactions/${this.authService.getUserId()}`;
+        return this.dataService.getData(endpoint).pipe(
+            map(response => response),
+            catchError((error) => throwError(error))
         );
     }
 }

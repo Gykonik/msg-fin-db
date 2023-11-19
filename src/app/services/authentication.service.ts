@@ -11,20 +11,19 @@ import {MessageService} from "primeng/api";
     providedIn: 'root'
 })
 export class AuthenticationService {
-    private loggedInUserSignal: WritableSignal<UserData | null> = signal({
-        id: 123,
-        firstname: "Niklas",
-        surname: "Büchel",
-        email: "abc@test.com",
-        rights: ACCESS_RIGHTS.ADMIN // Optional
-    });
+    private readonly USER_ENDPOINT: string = "user";
+
+    private loggedInUserSignal: WritableSignal<UserData | null> = signal(null);
 
     public isLoggedIn: Signal<boolean> = computed(() => this.getUserData() !== null)
+
+    public getUserId(): number {
+        return this.getUserData()?.id || -1;
+    }
 
     public getUserData(): UserData | null {
         return this.loggedInUserSignal();
     }
-
 
     public getRights(): ACCESS_RIGHTS {
         return this.getUserData()?.rights || ACCESS_RIGHTS.NONE;
@@ -41,23 +40,40 @@ export class AuthenticationService {
     constructor(private dataService: DataService, private router: Router,
                 protected messageService: MessageService,
     ) {
+        this.autoLogin()
+    }
+
+    private autoLogin(): void {
+        const userDataJson = localStorage.getItem('user_data');
+        if (userDataJson) {
+            const userData: UserData = JSON.parse(userDataJson);
+            this.loggedInUserSignal.set(userData);
+        }
     }
 
     login(username: string, password: string): Observable<boolean> {
         console.log("LOGIN WITH: ", {username, password})
 
         // TODO: REPLACE ENDPOINT WITH REAL LOGIN ENDPOINT
-        return this.dataService.postData('/login', {username, password}).pipe(
-            map((response): boolean => {
-                console.log("LOGIN RESPONSE: ", response)
-                // TODO: Somehow set the loggedInUser and rights
-                localStorage.setItem('user_data', response.token);
+        return this.dataService.postData(this.USER_ENDPOINT + '/login', {username, password}).pipe(
+            map((response: any): boolean => {
+                const userData: UserData = {
+                    id: response.id,
+                    firstname: response.firstname,
+                    surname: response.surname,
+                    username: response.username,
+                    email: response.email,
+                    rights: response.rights === "USER" ? ACCESS_RIGHTS.USER : response.rights === "ADMIN" ? ACCESS_RIGHTS.ADMIN : ACCESS_RIGHTS.NONE
+                };
+
+                localStorage.setItem('user_data', JSON.stringify(userData));
+                this.loggedInUserSignal.set(userData);
                 // this.loggedInUserSignal.set()
                 this.messageService.add({severity: 'success', summary: 'Login erfolgreich', detail: 'Du hast dich erfolgreich eingeloggt!', life: 3000});
                 return true; // Indicate successful login
             }),
             catchError((error) => {
-                console.error('Login failed', error);
+                this.messageService.add({severity: 'error', summary: 'Login fehlgeschlagen!', detail: error.error.message, life: 3000});
                 return throwError(error); // Forward the error
             })
         );
@@ -65,13 +81,13 @@ export class AuthenticationService {
 
     signup(user: UserData): Observable<boolean> {
         // TODO: REPLACE ENDPOINT WITH REAL REGISTER ENDPOINT
-        console.log("SIGNUP WITH: ", user)
-        return this.dataService.postData('/register', user).pipe(
-            map((response): boolean => {
+        return this.dataService.postData(this.USER_ENDPOINT + '/register', user).pipe(
+            map((): boolean => {
+                this.messageService.add({severity: 'success', summary: 'Registrierung erfolgreich!', detail: "Du hast dich erfolgreich registriert!", life: 3000});
                 return true; // Indicate successful registration
             }),
             catchError((error) => {
-                console.error('Login failed', error);
+                this.messageService.add({severity: 'error', summary: 'Registrierung fehlgeschlagen!', detail: error.error, life: 3000});
                 return throwError(error); // Forward the error
             })
         );

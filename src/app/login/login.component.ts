@@ -12,6 +12,7 @@ import {CardModule} from "primeng/card";
 import {DialogModule} from "primeng/dialog";
 import {ToggleButtonModule} from "primeng/togglebutton";
 import {DropdownModule} from "primeng/dropdown";
+import {ACCESS_RIGHTS, UserData} from "../types";
 
 @Component({
     selector: 'app-login',
@@ -49,14 +50,12 @@ export class LoginComponent {
         this.signupForm.reset({
             firstname: '',
             surname: '',
-            email: '',
             username: '',
+            email: '',
             password: '',
             confirmPassword: '',
             role: 'User'
         });
-
-        console.log("ROLES: ", this.roles)
     }
 
     protected resetLoginForm(): void {
@@ -70,8 +69,8 @@ export class LoginComponent {
         this.signupForm = this.fb.group({
             firstname: ['', Validators.required],
             surname: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
             username: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required],
             confirmPassword: ['', Validators.required],
             role: ['User', Validators.required]
@@ -128,24 +127,44 @@ export class LoginComponent {
     }
 
     signup(): void {
-        this.authService.signup(this.signupForm.getRawValue()).pipe(
-            tap({
-                next: (success: boolean): void => {
-                    if (success) {
-                        this.router.navigate(['/dashboard']);
-                        this.resetSignupForm()
-                    } else {
-                        // TODO: Show error message...
+        this.registrationSubmitted = true;
+        if (this.signupForm.valid) {
+            // Extracting form data and converting it to UserData structure
+            const formValue = this.signupForm.getRawValue();
+            const userData: UserData & { password: string } = {
+                id: 0,
+                firstname: formValue.firstname,
+                surname: formValue.surname,
+                username: formValue.username,
+                password: formValue.password,
+                email: formValue.email,
+                rights: formValue.role === 'Admin' ? ACCESS_RIGHTS.ADMIN : ACCESS_RIGHTS.USER
+            };
+
+            // Calling the signup method of the authentication service with the UserData
+            this.authService.signup(userData).pipe(
+                tap({
+                    next: (success: boolean): void => {
+                        console.log("RES: ", success)
+                        if (success) {
+                            this.hideDialog()
+                        } else {
+                            // Handle unsuccessful signup, show error message...
+                        }
+                    },
+                    error: (error) => {
+                        console.error('Signup error', error);
+                        // TODO: Handle server error, show error message using PrimeNG
                     }
-                },
-                error: (error) => {
-                    console.error('Login error', error);
-                    // TODO: Handle server error, shot error message using PrimeNG
-                }
-            }),
-            finalize(() => {
-                // Run code after completion regardless of success or error
-            })
-        ).subscribe();
+                })
+            ).subscribe();
+        }
     }
+
+    hideDialog(): void {
+        this.displaySignupDialog = false;
+        this.registrationSubmitted = false;
+        this.resetSignupForm()
+    }
+
 }

@@ -40,6 +40,7 @@ export interface UserData {
   id: number;
   firstname: string;
   surname: string;
+  username: string;
   email: string;
   rights?: ACCESS_RIGHTS;
 }

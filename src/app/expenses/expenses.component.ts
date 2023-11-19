@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ExpensesService} from '../services/expenses.service'; // Update path as necessary
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {Table, TableLazyLoadEvent, TableModule, TablePageEvent} from 'primeng/table';
+import {Table, TableLazyLoadEvent, TableModule} from 'primeng/table';
 import {Column, Expense} from "../types";
 import {ToolbarModule} from "primeng/toolbar";
 import {ButtonModule} from "primeng/button";
@@ -60,12 +60,18 @@ export class ExpensesComponent implements OnInit {
     expenseDialogMode: "ADD" | "EDIT" | null = null;
     columns: Column[] = [
         {field: 'id', header: 'ID', filterType: "numeric"},
-        {field: 'name', header: 'Name', inputType: "text", required: true, getDefaultValue: () => "",
-        filterType: "text"},
-        {field: 'description', header: 'Description', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
-        filterType: "text"},
-        {field: 'category', header: 'Category', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
-        filterType: "text"},
+        {
+            field: 'name', header: 'Name', inputType: "text", required: true, getDefaultValue: () => "",
+            filterType: "text"
+        },
+        {
+            field: 'description', header: 'Description', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
+            filterType: "text"
+        },
+        {
+            field: 'category', header: 'Category', pipe: "defaultValue", inputType: "text", getDefaultValue: () => "",
+            filterType: "text"
+        },
         {
             field: 'amount',
             header: 'Amount',
@@ -158,7 +164,6 @@ export class ExpensesComponent implements OnInit {
     }
 
     private sendEditExpenseRequest(expense: Expense): void {
-        console.log("EDIT EXPENSE...", expense);
         this.expenseService.updateExpense(expense).pipe(
             tap({
                 next: (success: boolean): void => {
@@ -252,8 +257,10 @@ export class ExpensesComponent implements OnInit {
 
     openEditExpense(expense: Expense) {
         this.currentExpense = {...expense};
+        this.currentExpense.date = new Date(this.currentExpense.date);
         // Update form values
         this.expenseForm.patchValue(expense);
+        this.expenseForm.controls["date"].patchValue(new Date(this.currentExpense.date))
         // Open Dialog
         this.expenseDialogMode = "EDIT";
         this.openExpenseDialog()

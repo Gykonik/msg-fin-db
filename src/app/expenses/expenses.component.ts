@@ -240,9 +240,9 @@ export class ExpensesComponent implements OnInit {
         this.expenseService.getExpenses(page, event?.rows ?? 10, sortField, sortOrder, filters).subscribe(response => {
             this.expenses = response.content;
             this.totalRecords = response.totalElements;
-            this.loading = false; // End loading
+            this.loading = false;
         }, error => {
-            this.loading = false; // End loading in case of error
+            this.loading = false;
         });
     }
 

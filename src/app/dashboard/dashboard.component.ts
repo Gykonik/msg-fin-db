@@ -214,9 +214,6 @@ export class DashboardComponent {
                 })
             });
 
-            // chartData.forEach(function (dataItem: any) {
-            //     series[dataItem[0]].data.push([dataItem[1], dataItem[2]]);
-            // });
             // Populate the series data
             chartData.forEach(function (dataItem: any) {
                 const dayIndex = dataItem[0]; // Day of the week index

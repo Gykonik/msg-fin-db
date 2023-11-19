@@ -69,7 +69,7 @@ export class AuthenticationService {
                 this.loggedInUserSignal.set(userData);
                 // this.loggedInUserSignal.set()
                 this.messageService.add({severity: 'success', summary: 'Login erfolgreich', detail: 'Du hast dich erfolgreich eingeloggt!', life: 3000});
-                return true; // Indicate successful login
+                return true;
             }),
             catchError((error) => {
                 this.messageService.add({severity: 'error', summary: 'Login fehlgeschlagen!', detail: error.error.message, life: 3000});
@@ -83,7 +83,7 @@ export class AuthenticationService {
         return this.dataService.postData(this.USER_ENDPOINT + '/register', user).pipe(
             map((): boolean => {
                 this.messageService.add({severity: 'success', summary: 'Registrierung erfolgreich!', detail: "Du hast dich erfolgreich registriert!", life: 3000});
-                return true; // Indicate successful registration
+                return true;
             }),
             catchError((error) => {
                 this.messageService.add({severity: 'error', summary: 'Registrierung fehlgeschlagen!', detail: error.error, life: 3000});
@@ -108,7 +108,7 @@ export class AuthenticationService {
     deleteUser(id: string): Observable<any> {
         return this.dataService.deleteData('/user').pipe(
             map((): boolean => {
-                return true; // Indicate successful login
+                return true;
             }),
             catchError((error) => {
                 return throwError(error); // Forward the error
